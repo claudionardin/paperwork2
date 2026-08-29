@@ -1,0 +1,15 @@
+# Extracted from existing proforma documents. TODO verify.
+code: PRL
+legal_name: Project Lab Srls
+short_name:
+address:
+  street: Via dei Mirissa 11/8
+  postal_code: "34149"
+  city: Trieste
+  country: IT
+vat_number: IT01313650325
+tax_code:
+is_business: true
+contact_person:
+email:
+notes: Intra EU B2B. Services are reverse charge, the clause must be printed.

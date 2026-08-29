@@ -1,0 +1,211 @@
+# Offer and contract clauses, Italian.
+#
+# Schema
+#   sections: ordered headings printed above the clauses that belong to them
+#   clauses:  one entry per numbered clause
+#     id       stable, language independent, same id in offer.en.yaml
+#              referenced from the `clauses:` list in a document frontmatter
+#     section  id of the section it belongs to
+#     weight   sort order, gaps of 10 so a clause can be inserted later
+#     title    run-in heading, printed in bold at the start of the clause
+#     body     Markdown
+#
+# The numbers 1..N are generated at render time over the clauses actually printed,
+# so excluding a clause in a document never leaves a hole in the numbering.
+# Never write the number in the body.
+#
+# Placeholders, substituted by the renderer:
+#   {{supplier.legal_name}}      Axelered d.o.o., from config/company.yaml
+#   {{supplier.identification}}  computed: "con numero di partita IVA <vat> e sede in <address>"
+#   {{supplier.governing_law}}   "slovena", from company.yaml legal.governing_law
+#   {{supplier.forum}}           "Koper (Okrožno sodišče v Kopru), Slovenia", from company.yaml legal.forum
+#   {{client.legal_name}}        from config/clients/<CCC>.yaml
+#   {{client.identification}}    computed, same rule as the supplier, falls back to
+#                                "con codice fiscale <tax_code> e sede in <address>" for an
+#                                Italian consumer, and to "con sede in <address>" when neither exists
+#   {{client.short_name}}        optional defined term, defaults to legal_name
+#
+# The dual signature block is NOT a clause. It is part of the offer template,
+# its labels live in config/strings/it.yaml.
+
+sections:
+  - id: contract
+    title: IL CONTRATTO
+    weight: 10
+  - id: collaboration
+    title: COLLABORAZIONE E ACCESSI
+    weight: 20
+  - id: ip
+    title: PROPRIETÀ INTELLETTUALE
+    weight: 30
+  - id: payment
+    title: PAGAMENTO
+    weight: 40
+  - id: changes
+    title: MODIFICHE E RECESSO
+    weight: 50
+  - id: other
+    title: ALTRO
+    weight: 60
+
+clauses:
+  - id: contract
+    section: contract
+    weight: 10
+    title: Contratto
+    body: |
+      Il presente contratto, una volta debitamente sottoscritto da entrambe le Parti, costituisce un contratto di vendita giuridicamente vincolante e si intende concluso alla data dell'ultima sottoscrizione (la “Data di Efficacia”). Il presente contratto è stipulato tra {{supplier.legal_name}}, {{supplier.identification}} (il “Fornitore”), e {{client.legal_name}}, {{client.identification}} (il “Cliente”), di seguito denominate singolarmente “Parte” e congiuntamente “Parti”.
+
+  - id: subject
+    section: contract
+    weight: 20
+    title: Oggetto
+    body: |
+      Il presente Contratto disciplina la vendita di un servizio dal Fornitore al Cliente. Il risultato di tale prestazione è quanto elencato nella sezione “Delivery and Deliverables”, che il Fornitore consegnerà debitamente al Cliente nella forma e nei termini descritti nella medesima sezione, e meglio precisati in altre sezioni del presente documento. Ogni altra attività è esclusa, con particolare riferimento a quanto elencato nella sezione “Esclusioni”.
+
+  - id: collaboration
+    section: collaboration
+    weight: 30
+    title: Collaborazione
+    body: |
+      Le Parti concordano che, data la natura del servizio, la prestazione del Fornitore dipende in misura rilevante dalla collaborazione del Cliente, il quale è tenuto a rispondere tempestivamente a ogni richiesta del Fornitore e a prestare ogni ragionevole supporto necessario per utilizzare e comprendere lo stato dell'arte corrente.
+
+  - id: systems
+    section: collaboration
+    weight: 40
+    title: Sistemi
+    body: |
+      Il Cliente è tenuto a concedere al Fornitore ogni accesso necessario alle tecnologie e alle architetture (i “Sistemi”) di proprietà o sotto il controllo del Cliente e/o di terzi che agiscano per suo conto. Tali Sistemi devono rimanere in funzione e accessibili al Fornitore per l'intera durata della prestazione.
+
+  - id: state_of_the_art_access
+    section: collaboration
+    weight: 50
+    title: Accesso allo stato dell'arte
+    body: |
+      Ove esistente, il Cliente è tenuto a concedere al Fornitore l'accesso a ogni risorsa e conoscenza relativa allo stato dell'arte corrente (ivi compresi, a titolo esemplificativo e non esaustivo, codice, documentazione o progettazione) e a fornire ogni ulteriore informazione o infrastruttura necessaria per utilizzare, comprendere o collaudare lo stato dell'arte corrente. Ciò comprende il contatto diretto con chiunque abbia partecipato alla concezione, progettazione o realizzazione dello stato dell'arte.
+
+  - id: third_party_systems
+    section: collaboration
+    weight: 60
+    title: Sistemi di terzi
+    body: |
+      Ogni sistema di terzi necessario all'esecuzione del servizio deve essere procurato dal Cliente e reso accessibile al Fornitore per l'intera durata della prestazione, a titolo gratuito. Il Fornitore non sosterrà alcun costo per tali sistemi né sottoscriverà alcun abbonamento per conto del Cliente. Ogni sistema eventualmente necessario è indicato nel presente documento (salvo diversa esplicita indicazione) e il Cliente dichiara con la presente di averne valutato i relativi oneri e di esserne consapevole.
+
+  - id: intellectual_property
+    section: ip
+    weight: 70
+    title: Proprietà intellettuale
+    body: |
+      Il risultato del servizio prestato resta di proprietà intellettuale del Fornitore fino all'integrale pagamento del corrispettivo da parte del Cliente. Le Parti concordano che, a seguito di tale evento, il Fornitore trasferirà la proprietà intellettuale al Cliente, che ne diverrà titolare esclusivo.
+
+  - id: third_party_ip
+    section: ip
+    weight: 80
+    title: Proprietà intellettuale di terzi
+    body: |
+      Qualora il Fornitore utilizzi o conceda in licenza proprietà intellettuale di terzi nell'esecuzione del servizio, è responsabilità del Fornitore informarne il Cliente, il quale è tenuto a verificare i termini di licenza e a ottenere e mantenere le licenze e le autorizzazioni necessarie. La presente disposizione si applica anche alla proprietà intellettuale open source, con qualunque licenza rilasciata.
+
+  - id: confidentiality
+    section: ip
+    weight: 90
+    title: Riservatezza
+    body: |
+      Ciascuna Parte è tenuta a mantenere la riservatezza di tutte le informazioni confidenziali e, in assenza del consenso scritto dell'altra Parte, non potrà divulgare alcuna informazione confidenziale rilevante a terzi, fatta eccezione per le informazioni che: (a) siano o divengano di pubblico dominio, per causa diversa da una divulgazione non autorizzata della Parte ricevente; (b) debbano essere divulgate in forza di leggi o regolamenti applicabili, di regole di mercati regolamentati, o di provvedimenti dell'autorità giudiziaria o di altre autorità pubbliche; ovvero (c) debbano essere divulgate da una Parte ai propri soci, investitori, consulenti legali o consulenti finanziari in relazione all'operazione qui prevista, purché tali soggetti siano vincolati a obblighi di riservatezza analoghi a quelli previsti dalla presente clausola. La divulgazione di informazioni confidenziali da parte del personale o dei soggetti incaricati da una Parte equivale a divulgazione da parte della Parte stessa, che ne risponde a titolo di inadempimento del presente Contratto. La presente clausola resta efficace anche dopo la cessazione del presente Contratto, per qualsiasi causa.
+
+  - id: fixed_price
+    section: payment
+    weight: 100
+    title: Prezzo fisso
+    body: |
+      Ove applicabile, il preventivo a prezzo fisso comporta che il Fornitore non possa addebitare costi ulteriori rispetto al preventivo nel caso in cui il prezzo quotato per il Servizio non rifletta i costi effettivamente sostenuti nell'esecuzione del Servizio. In caso di qualsiasi Modifica al presente Contratto o a uno qualsiasi dei requisiti qui indicati, il prezzo fisso si intende rinunciato ovvero da rinegoziare. Per la stima del prezzo il Fornitore si è basato sulle informazioni fornite dal Cliente, o da altro personale autorizzato per suo conto; qualora tali informazioni risultino inesatte o non veritiere, ogni obbligo del Fornitore relativo al prezzo fisso si intende inapplicabile e il Fornitore potrà addebitare al Cliente ogni costo ulteriore sostenuto nell'esecuzione del servizio.
+
+  - id: price
+    section: payment
+    weight: 110
+    title: Prezzo
+    body: |
+      Il Fornitore si impegna a vendere al Cliente il servizio al prezzo indicato nella sezione “Offerta”. Il Cliente accetta la vendita e prende atto che, per la sua natura, la prestazione del servizio non è rimborsabile e deve in ogni caso essere pagata.
+
+  - id: amendments
+    section: changes
+    weight: 120
+    title: Modifiche
+    body: |
+      Nessuna modifica o variazione del presente contratto si intende apportata se non con il consenso delle Parti, formalizzata per iscritto e debitamente sottoscritta dalle Parti. Pertanto, nessuna modifica può essere apportata ai deliverable o alle specifiche di progetto se non espressamente concordata da entrambe le Parti.
+
+  - id: termination
+    section: changes
+    weight: 130
+    title: Recesso
+    body: |
+      Ciascuna Parte può recedere dal presente Contratto in qualsiasi momento mediante comunicazione scritta all'altra Parte. Il Cliente è tenuto al pagamento del servizio già prestato dal Fornitore. In caso di recesso, l'importo dovuto è pari al prezzo integrale di ogni deliverable completato ed è calcolato “pro rata temporis” per ogni deliverable non completato. Ciò vale anche quando il risultato del servizio sia parziale, reso inutilizzabile, o privo delle caratteristiche descritte nella sezione “Delivery and Deliverables” a causa del recesso. Resta impregiudicato il diritto di ciascuna Parte di agire per la risoluzione del Contratto per inadempimento dell'altra Parte.
+
+  - id: service_start
+    section: other
+    weight: 140
+    title: Avvio del servizio
+    body: |
+      Il servizio ha inizio alla più recente tra le seguenti date: la data di sottoscrizione del presente contratto da parte di entrambe le Parti; la data di ricezione da parte del Fornitore di ogni pagamento anticipato; la data in cui entrambe le Parti hanno concordato di avviare il Servizio e si sono impegnate a garantirne la buona riuscita.
+
+  - id: delivery_terms
+    section: other
+    weight: 150
+    title: Termini di consegna
+    body: |
+      Il Fornitore consegnerà i deliverable nei termini descritti nella sezione “Delivery and Deliverables”. Deliverable differenti, o loro varianti quali, a titolo esemplificativo e non esaustivo, traduzioni lessicali, cambi di linguaggio di programmazione od ottimizzazioni, non sono dovuti se non espressamente concordati nel presente Contratto. Salvo diversa indicazione, tutti i termini di consegna sono espressi in settimane a decorrere dalla data di avvio del Servizio.
+
+  - id: delay_disclaimer
+    section: other
+    weight: 160
+    title: Esonero di responsabilità per ritardo o mancata esecuzione
+    body: |
+      Il Fornitore non risponde nei confronti del Cliente per ritardi, mancata consegna o inadempimento del presente contratto dovuti a conflitti sindacali, ritardi, indisponibilità di sistemi, servizi o beni necessari all'esecuzione del Servizio, malfunzionamenti, incendi, incidenti, cause di forza maggiore o qualsiasi altra causa al di fuori del controllo del Fornitore. Il Fornitore informerà il Cliente immediatamente quando si renda conto di non essere in grado di eseguire il Servizio o di consegnare i deliverable come promesso. Ciascuna Parte può recedere dal presente Contratto a seguito di tale comunicazione.
+
+  - id: no_warranty
+    section: other
+    weight: 170
+    title: Esclusione di garanzie
+    body: |
+      OGNI DELIVERABLE, AL MOMENTO DELL'ACCETTAZIONE DA PARTE DEL CLIENTE, È FORNITO “COSÌ COM'È” E SI INTENDE CORRETTAMENTE FUNZIONANTE. IL FORNITORE ESCLUDE OGNI RESPONSABILITÀ FUTURA DERIVANTE DA DEGRADO, USO IMPROPRIO O QUALSIASI ALTRO EVENTO CHE POSSA COMPROMETTERE L'EFFICACIA DI QUANTO CONSEGNATO. IL FORNITORE ESCLUDE OGNI GARANZIA SUCCESSIVA ALL'INTEGRAZIONE INIZIALE.
+
+  - id: liability_cap
+    section: other
+    weight: 180
+    title: Limitazione di responsabilità
+    body: |
+      IN NESSUN CASO CIASCUNA PARTE RISPONDERÀ NEI CONFRONTI DELL'ALTRA PARTE O DI TERZI PER DANNI DERIVANTI DA QUALSIASI PARTE DEL PRESENTE CONTRATTO, QUALI, A TITOLO ESEMPLIFICATIVO E NON ESAUSTIVO, PERDITA DI FATTURATO, MANCATO GUADAGNO O PERDITA DI OPPORTUNITÀ COMMERCIALI, COSTI DERIVANTI DA RITARDO O DA MANCATA CONSEGNA, CHE NON SIANO CONNESSI A, O DIRETTA CONSEGUENZA DI, COLPA O INADEMPIMENTO DI UNA PARTE.
+
+  - id: severability
+    section: other
+    weight: 190
+    title: Autonomia delle clausole
+    body: |
+      Qualora una disposizione del presente Contratto sia ritenuta invalida o inefficace, in tutto o in parte, tale parte sarà espunta dal resto del Contratto e tutte le altre disposizioni conserveranno pieno vigore ed efficacia.
+
+  - id: waiver
+    section: other
+    weight: 200
+    title: Rinuncia
+    body: |
+      Il mancato esercizio da parte di una Parte di un diritto, potere o facoltà previsti dal presente Contratto non costituisce rinuncia al successivo o futuro esercizio di tale diritto, potere o facoltà, né all'esercizio di qualsiasi altro diritto, potere o facoltà.
+
+  - id: validity
+    section: other
+    weight: 210
+    title: Validità e vincolatività del contratto
+    body: |
+      Il presente Contratto è valido e vincolante tra le Parti come sopra indicate. Il presente Contratto può essere stipulato ed è valido e vincolante sia in tutta Europa sia negli Stati Uniti. Ciascuna Parte dichiara di avere i poteri necessari per stipulare il presente Contratto.
+
+  - id: governing_law
+    section: other
+    weight: 220
+    title: Legge applicabile e giurisdizione
+    body: |
+      Le Parti concordano che il presente Contratto è regolato dalla legge dello Stato o del Paese in cui entrambe le Parti operano. Qualora le Parti operino in Stati e/o Paesi differenti, il presente Contratto è regolato dalla legge {{supplier.governing_law}}. Per ogni controversia derivante dal presente Contratto o a esso connessa, ivi comprese quelle relative alla sua validità, interpretazione, esecuzione e cessazione, è competente in via esclusiva il tribunale del luogo in cui ha sede il Fornitore; alla data di sottoscrizione, tale foro è quello di {{supplier.forum}}.
+
+  - id: entire_agreement
+    section: other
+    weight: 230
+    title: Completezza del contratto
+    body: |
+      Il presente Contratto è consegnato come parte di un documento di “offerta”, “preventivo” o “relazione” (il “Documento”) e può includere allegati (gli “Allegati”), ossia quelli espressamente elencati nella sezione “Allegati”; ove tale sezione sia assente o non ne elenchi alcuno, il Documento non ha Allegati e i riferimenti agli Allegati contenuti nella presente clausola si intendono non applicabili. Il presente Contratto si riferisce al Documento nella sua interezza, inclusi gli eventuali Allegati, e non può essere sottoscritto né interpretato prescindendo da esso. Le Parti dichiarano con la presente di aver letto e compreso l'intero Documento e gli eventuali Allegati, e sottoscrivono il presente Contratto accettando il Documento nella sua interezza. Le Parti riconoscono e concordano che il presente Contratto costituisce l'intero accordo tra le Parti. Qualora le Parti desiderino variare, integrare o comunque modificare qualsiasi termine, dovranno farlo per iscritto, con sottoscrizione di entrambe.

@@ -1,0 +1,19 @@
+{
+  // Tinymist must use the same fonts as the CLI, otherwise the live preview
+  // diverges from `typst compile --font-path assets/fonts`.
+  "tinymist.fontPaths": ["${workspaceFolder}/assets/fonts"],
+  "tinymist.systemFonts": false,
+  "tinymist.formatterMode": "typstyle",
+  // PDFs are produced by render.ps1 into out/, never by the editor.
+  "tinymist.exportPdf": "never",
+
+  "[typst]": {
+    "editor.defaultFormatter": "myriad-dreamin.tinymist",
+    "editor.formatOnSave": true
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml",
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true
+  }
+}

@@ -1,0 +1,70 @@
+# Fixed strings, English. Templates never contain literal text, they look it up here.
+# Placeholders use the same {{...}} syntax as the clause bodies.
+# TODO confirm the English wording against the existing offer PDFs.
+
+# Used to build {{supplier.identification}} and {{client.identification}}.
+# The renderer picks the first case that the party data supports.
+identification:
+  with_vat: VAT number {{vat_number}}, with registered office at {{address}}
+  with_tax_code: tax code {{tax_code}}, with registered office at {{address}}
+  address_only: with registered office at {{address}}
+
+# Dual signature block appended to an offer when the frontmatter has `signature: true`.
+signature:
+  intro: >-
+    The Parties accept the terms and conditions set out above, as evidenced by their
+    respective signatures:
+  supplier_party: (Supplier)
+  client_party: (Customer)
+  representative_of: "{{role}} of {{party}}"
+  signed_on: "Signed on:"
+  empty_date: __ / __ / ____
+
+# Document titles, keyed by document type.
+titles:
+  "off": Offer          # quoted: bare off is a boolean to a YAML 1.1 parser
+  spc: Technical Specification
+  pin: Proforma Invoice
+  inv: Invoice
+  cmr: CMR Consignment Note
+
+# How numbers read in this language. Amounts are always two decimals; only the separators
+# change. English groups with a comma and marks the decimals with a point: 1,234.56.
+number_format:
+  thousands: ","
+  decimal: "."
+
+# Fixed labels used by the templates.
+labels:
+  number: "No."
+  supplier: "Supplier:"
+  customer: "Customer:"
+  description: Description
+  unit_price: Unit price
+  quantity: Quantity
+  price: Price
+  subtotal: Subtotal
+  vat: VAT
+  total: Total Price
+  headed_to: Headed to
+  iban: IBAN
+  swift: SWIFT/BIC
+  page: Page
+  vat_number: "VAT no."
+  tax_code: "Tax code"
+  reg_number: "Reg. no."
+  valid_until: "Valid until"
+  share_capital: share capital
+  entered_on: entered on
+
+# Suffix printed in the VAT summary row, per VAT case of config/tax/vat.yaml.
+# An empty value prints no suffix.
+vat_cases:
+  domestic: ""
+  eu_b2b_goods: intra-Community supply
+  eu_b2b_service: reverse charge
+  eu_b2c: ""
+  non_eu_b2c: ""
+  export_goods: export
+  non_eu_service: outside the scope of Slovenian VAT
+  public_administration: ""

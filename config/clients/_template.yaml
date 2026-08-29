@@ -1,0 +1,15 @@
+# Copy to <CCC>.yaml where CCC is the 3 letter internal client code used in document numbers.
+code: XXX
+legal_name:
+short_name:             # optional, e.g. OGS. Used in the signature block, defaults to legal_name
+address:
+  street:
+  postal_code:
+  city:
+  country:              # ISO 2 letters, drives the VAT rule
+vat_number:             # required for intra EU B2B exemption
+tax_code:               # codice fiscale / FC, for Italian individuals
+is_business: true       # false means consumer, Slovenian VAT applies
+contact_person:
+email:
+notes:

@@ -1,0 +1,69 @@
+# Fixed strings, Italian. Templates never contain literal text, they look it up here.
+# Placeholders use the same {{...}} syntax as the clause bodies.
+
+# Used to build {{supplier.identification}} and {{client.identification}}.
+# The renderer picks the first case that the party data supports.
+identification:
+  with_vat: con numero di partita IVA {{vat_number}} e sede in {{address}}
+  with_tax_code: con codice fiscale {{tax_code}} e sede in {{address}}
+  address_only: con sede in {{address}}
+
+# Dual signature block appended to an offer when the frontmatter has `signature: true`.
+signature:
+  intro: >-
+    Le Parti accettano i termini e le condizioni sopra indicati, come comprovato dalle
+    rispettive sottoscrizioni:
+  supplier_party: (Fornitore)
+  client_party: (Cliente)
+  representative_of: "{{role}} di {{party}}"    # e.g. "Legale rappresentante di Axelered d.o.o."
+  signed_on: "Firmato in data:"
+  empty_date: __ / __ / ____
+
+# Titoli dei documenti, per tipo.
+titles:
+  "off": Offerta        # tra virgolette: off nudo e un booleano per un parser YAML 1.1
+  spc: Specifica Tecnica
+  pin: Fattura Proforma
+  inv: Fattura
+  cmr: Lettera di Vettura CMR
+
+# Come si leggono i numeri in questa lingua. Gli importi hanno sempre due decimali, cambiano
+# solo i separatori. L'italiano raggruppa col punto e segna i decimali con la virgola: 1.234,56.
+number_format:
+  thousands: "."
+  decimal: ","
+
+# Etichette fisse usate dai template.
+labels:
+  number: "N."
+  supplier: "Fornitore:"
+  customer: "Cliente:"
+  description: Descrizione
+  unit_price: Prezzo unitario
+  quantity: Quantita
+  price: Importo
+  subtotal: Imponibile
+  vat: IVA
+  total: Totale
+  headed_to: Intestato a
+  iban: IBAN
+  swift: SWIFT/BIC
+  page: Pagina
+  vat_number: "P. IVA"
+  tax_code: "Codice fiscale"
+  reg_number: "N. registro"
+  valid_until: "Valida fino al"
+  share_capital: capitale sociale
+  entered_on: iscritta il
+
+# Suffisso stampato nella riga di riepilogo IVA, per caso IVA di config/tax/vat.yaml.
+# Un valore vuoto non stampa alcun suffisso.
+vat_cases:
+  domestic: ""
+  eu_b2b_goods: cessione intracomunitaria
+  eu_b2b_service: inversione contabile
+  eu_b2c: ""
+  non_eu_b2c: ""
+  export_goods: esportazione
+  non_eu_service: fuori campo IVA slovena
+  public_administration: ""

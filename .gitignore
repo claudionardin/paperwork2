@@ -1,0 +1,5 @@
+# Rendered PDFs. The source is the document; the PDF is a build artefact.
+out/
+
+.DS_Store
+Thumbs.db

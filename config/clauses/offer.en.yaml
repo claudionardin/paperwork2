@@ -1,0 +1,195 @@
+# Offer and contract clauses, English.
+#
+# Same schema, same ids, same weights and same order as offer.it.yaml. See that file for the
+# description of the fields and of the {{...}} placeholders.
+#
+# STATUS: PROVISIONAL WORDING, NOT REVIEWED.
+# These bodies are a working translation of the Italian clauses, written so that an English
+# offer renders complete. They are NOT the original English contract texts and no lawyer has
+# read them. Replace them with the originals from the existing offers, or have them reviewed,
+# before an English offer goes out. See TODO.md.
+#
+# Section names quoted inside the clauses ("Delivery and Deliverables", "Exclusions", "Offer",
+# "Annexes") must match the headings actually used in the English offer body.
+
+sections:
+  - id: contract
+    title: THE CONTRACT
+    weight: 10
+  - id: collaboration
+    title: COLLABORATION AND ACCESS
+    weight: 20
+  - id: ip
+    title: INTELLECTUAL PROPERTY
+    weight: 30
+  - id: payment
+    title: PAYMENT
+    weight: 40
+  - id: changes
+    title: CHANGES AND TERMINATION
+    weight: 50
+  - id: other
+    title: OTHER
+    weight: 60
+
+clauses:
+  - id: contract
+    section: contract
+    weight: 10
+    title: Contract
+    body: |
+      This contract, once duly signed by both Parties, constitutes a legally binding contract of sale and is concluded on the date of the last signature (the "Effective Date"). This contract is entered into between {{supplier.legal_name}}, {{supplier.identification}} (the "Supplier"), and {{client.legal_name}}, {{client.identification}} (the "Customer"), each referred to as a "Party" and together as the "Parties".
+
+  - id: subject
+    section: contract
+    weight: 20
+    title: Subject
+    body: |
+      This Contract governs the sale of a service by the Supplier to the Customer. The result of that service is what is listed in the "Delivery and Deliverables" section, which the Supplier shall duly deliver to the Customer in the form and within the terms described in that section, as further specified in other sections of this document. Any other activity is excluded, in particular anything listed in the "Exclusions" section.
+
+  - id: collaboration
+    section: collaboration
+    weight: 30
+    title: Collaboration
+    body: |
+      The Parties agree that, given the nature of the service, the Supplier's performance depends to a significant extent on the Customer's collaboration. The Customer shall respond promptly to every request of the Supplier and provide any reasonable support needed to use and understand the current state of the art.
+
+  - id: systems
+    section: collaboration
+    weight: 40
+    title: Systems
+    body: |
+      The Customer shall grant the Supplier all necessary access to the technologies and architectures (the "Systems") owned or controlled by the Customer and/or by third parties acting on its behalf. Those Systems shall remain operational and accessible to the Supplier for the whole duration of the service.
+
+  - id: state_of_the_art_access
+    section: collaboration
+    weight: 50
+    title: Access to the state of the art
+    body: |
+      Where it exists, the Customer shall grant the Supplier access to every resource and item of knowledge concerning the current state of the art (including, without limitation, code, documentation or design) and provide any further information or infrastructure needed to use, understand or test it. This includes direct contact with anyone who took part in conceiving, designing or building the state of the art.
+
+  - id: third_party_systems
+    section: collaboration
+    weight: 60
+    title: Third party systems
+    body: |
+      Any third party system required to perform the service shall be procured by the Customer and made accessible to the Supplier free of charge for the whole duration of the service. The Supplier shall bear no cost for such systems and shall take out no subscription on behalf of the Customer. Any system that is required is indicated in this document (unless expressly stated otherwise), and the Customer hereby declares that it has assessed the related costs and is aware of them.
+
+  - id: intellectual_property
+    section: ip
+    weight: 70
+    title: Intellectual property
+    body: |
+      The result of the service performed remains the intellectual property of the Supplier until the Customer has paid the consideration in full. The Parties agree that, upon such payment, the Supplier shall transfer the intellectual property to the Customer, who shall become its exclusive owner.
+
+  - id: third_party_ip
+    section: ip
+    weight: 80
+    title: Third party intellectual property
+    body: |
+      Where the Supplier uses or licenses third party intellectual property in performing the service, it is the Supplier's responsibility to inform the Customer, who shall review the licence terms and obtain and maintain the necessary licences and authorisations. This provision applies to open source intellectual property as well, under any licence.
+
+  - id: confidentiality
+    section: ip
+    weight: 90
+    title: Confidentiality
+    body: |
+      Each Party shall keep all confidential information confidential and, without the written consent of the other Party, shall not disclose any relevant confidential information to third parties, except for information that: (a) is or becomes public knowledge other than through an unauthorised disclosure by the receiving Party; (b) must be disclosed under applicable laws or regulations, the rules of a regulated market, or an order of a court or other public authority; or (c) must be disclosed by a Party to its shareholders, investors, legal advisers or financial advisers in connection with the transaction contemplated here, provided that those persons are bound by confidentiality obligations equivalent to those set out in this clause. Disclosure of confidential information by the personnel or the appointees of a Party is equivalent to disclosure by that Party, which is liable for it as a breach of this Contract. This clause survives the termination of this Contract for any reason.
+
+  - id: fixed_price
+    section: payment
+    weight: 100
+    title: Fixed price
+    body: |
+      Where applicable, a fixed price quotation means that the Supplier may not charge costs beyond the quotation if the price quoted for the Service does not reflect the costs actually incurred in performing it. Upon any Change to this Contract or to any of the requirements stated here, the fixed price is waived or is to be renegotiated. The Supplier estimated the price on the basis of the information provided by the Customer, or by other personnel authorised on its behalf; should that information prove inaccurate or untrue, every obligation of the Supplier concerning the fixed price ceases to apply and the Supplier may charge the Customer for any further cost incurred in performing the service.
+
+  - id: price
+    section: payment
+    weight: 110
+    title: Price
+    body: |
+      The Supplier undertakes to sell the service to the Customer at the price stated in the "Offer" section. The Customer accepts the sale and acknowledges that, by its nature, the performance of the service is non refundable and shall be paid for in any event.
+
+  - id: amendments
+    section: changes
+    weight: 120
+    title: Amendments
+    body: |
+      No amendment or variation of this contract is made unless agreed by the Parties, put in writing and duly signed by them. Accordingly, no change may be made to the deliverables or to the project specifications unless expressly agreed by both Parties.
+
+  - id: termination
+    section: changes
+    weight: 130
+    title: Termination
+    body: |
+      Either Party may terminate this Contract at any time by written notice to the other Party. The Customer shall pay for the service already performed by the Supplier. On termination, the amount due is the full price of every completed deliverable and is calculated pro rata temporis for every deliverable that is not completed. This applies also where the result of the service is partial, rendered unusable, or lacking the characteristics described in the "Delivery and Deliverables" section because of the termination. The right of either Party to seek termination for breach by the other Party is unaffected.
+
+  - id: service_start
+    section: other
+    weight: 140
+    title: Start of the service
+    body: |
+      The service starts on the latest of the following dates: the date on which both Parties signed this contract; the date on which the Supplier received any advance payment; the date on which both Parties agreed to start the Service and undertook to make it succeed.
+
+  - id: delivery_terms
+    section: other
+    weight: 150
+    title: Delivery terms
+    body: |
+      The Supplier shall deliver the deliverables within the terms described in the "Delivery and Deliverables" section. Different deliverables, or variants of them such as, without limitation, lexical translations, changes of programming language or optimisations, are not owed unless expressly agreed in this Contract. Unless stated otherwise, all delivery terms are expressed in weeks from the start date of the Service.
+
+  - id: delay_disclaimer
+    section: other
+    weight: 160
+    title: No liability for delay or non performance
+    body: |
+      The Supplier is not liable to the Customer for delay, failure to deliver or breach of this contract caused by labour disputes, delays, unavailability of systems, services or goods needed to perform the Service, malfunctions, fire, accident, force majeure or any other cause beyond the Supplier's control. The Supplier shall inform the Customer immediately once it becomes aware that it cannot perform the Service or deliver the deliverables as promised. Either Party may terminate this Contract following such notice.
+
+  - id: no_warranty
+    section: other
+    weight: 170
+    title: No warranty
+    body: |
+      EVERY DELIVERABLE, AT THE MOMENT OF ITS ACCEPTANCE BY THE CUSTOMER, IS PROVIDED "AS IS" AND IS DEEMED TO BE WORKING CORRECTLY. THE SUPPLIER DISCLAIMS ANY FUTURE LIABILITY ARISING FROM DEGRADATION, IMPROPER USE OR ANY OTHER EVENT THAT MAY IMPAIR THE EFFECTIVENESS OF WHAT WAS DELIVERED. THE SUPPLIER DISCLAIMS ANY WARRANTY AFTER THE INITIAL INTEGRATION.
+
+  - id: liability_cap
+    section: other
+    weight: 180
+    title: Limitation of liability
+    body: |
+      IN NO EVENT SHALL EITHER PARTY BE LIABLE TO THE OTHER PARTY OR TO ANY THIRD PARTY FOR DAMAGES ARISING OUT OF ANY PART OF THIS CONTRACT, SUCH AS, WITHOUT LIMITATION, LOSS OF REVENUE, LOSS OF PROFIT OR LOSS OF BUSINESS OPPORTUNITY, COSTS ARISING FROM DELAY OR FROM FAILURE TO DELIVER, THAT ARE NOT CONNECTED WITH, OR A DIRECT CONSEQUENCE OF, THE FAULT OR BREACH OF A PARTY.
+
+  - id: severability
+    section: other
+    weight: 190
+    title: Severability
+    body: |
+      Should any provision of this Contract be held invalid or ineffective, in whole or in part, that part shall be severed from the rest of the Contract and all other provisions shall remain in full force and effect.
+
+  - id: waiver
+    section: other
+    weight: 200
+    title: Waiver
+    body: |
+      A Party's failure to exercise a right, power or remedy under this Contract does not constitute a waiver of the later or future exercise of that right, power or remedy, nor of the exercise of any other right, power or remedy.
+
+  - id: validity
+    section: other
+    weight: 210
+    title: Validity and binding effect of the contract
+    body: |
+      This Contract is valid and binding between the Parties as identified above. This Contract may be entered into and is valid and binding both throughout Europe and in the United States. Each Party declares that it has the powers necessary to enter into this Contract.
+
+  - id: governing_law
+    section: other
+    weight: 220
+    title: Governing law and jurisdiction
+    body: |
+      The Parties agree that this Contract is governed by the law of the State or Country in which both Parties operate. Should the Parties operate in different States and/or Countries, this Contract is governed by {{supplier.governing_law}} law. For any dispute arising out of or in connection with this Contract, including disputes as to its validity, interpretation, performance and termination, the court of the place where the Supplier has its registered office has exclusive jurisdiction; as at the date of signature, that forum is {{supplier.forum}}.
+
+  - id: entire_agreement
+    section: other
+    weight: 230
+    title: Entire agreement
+    body: |
+      This Contract is delivered as part of an "offer", "quotation" or "report" document (the "Document") and may include annexes (the "Annexes"), namely those expressly listed in the "Annexes" section; where that section is absent or lists none, the Document has no Annexes and the references to Annexes in this clause do not apply. This Contract refers to the Document in its entirety, including any Annexes, and may not be signed or interpreted apart from it. The Parties hereby declare that they have read and understood the whole Document and any Annexes, and sign this Contract accepting the Document in its entirety. The Parties acknowledge and agree that this Contract constitutes the entire agreement between them. Should the Parties wish to vary, supplement or otherwise amend any term, they shall do so in writing, signed by both.
