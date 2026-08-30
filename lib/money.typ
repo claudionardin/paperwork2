@@ -46,5 +46,5 @@
 // Line amount: cents times a quantity in thousandths.
 #let mul-qty(cents, qty) = round(cents * qty / 1000)
 
-// VAT amount: cents times a rate in percent, as stored in config/tax/vat.yaml.
+// VAT amount: cents times a rate in percent, as stored in config/tax/<regime>.yaml.
 #let vat-of(cents, rate) = round(cents * rate / 100)

@@ -2,10 +2,50 @@
 
 #let money(data, v) = text(v + " " + data.currency_symbol)
 
-// Priced items. Header repeats on every page, totals never orphan.
+// Priced items, grouped by VAT treatment. Each group closes with its own taxable base, its
+// own VAT line and the clause that justifies it, so a mixed document never leaves the reader
+// guessing which exemption applies to which line. The grand total closes the table.
+// Header repeats on every page.
 #let items-table(data) = {
   if data.items.len() == 0 { return }
   set par(justify: false, leading: 0.55em)
+
+  let head(c) = text(weight: "bold", size: size-small, fill: muted, tracking: 0.3pt, upper(c))
+  let label-cell(body, bold: false) = table.cell(colspan: 3, align: right)[
+    #text(weight: if bold { "bold" } else { "regular" }, fill: if bold { ink } else { muted }, body)
+  ]
+  let value-cell(body, bold: false) = table.cell(align: right)[
+    #text(weight: if bold { "bold" } else { "regular" }, body)
+  ]
+  let note-cell(body) = table.cell(colspan: 4, align: right, inset: (x: 2mm, top: 0mm, bottom: 2.4mm))[
+    #text(size: size-small, fill: muted, style: "italic", body)
+  ]
+
+  let rows = ()
+  for (i, g) in data.groups.enumerate() {
+    // Air between one treatment and the next.
+    if i > 0 { rows.push(table.cell(colspan: 4, inset: (y: 1.4mm))[]) }
+    for it in g.items {
+      rows += (
+        [#it.description],
+        money(data, it.unit_price),
+        [#it.quantity],
+        money(data, it.amount),
+      )
+    }
+    rows.push(table.hline(stroke: 0.4pt + rule))
+    rows.push(label-cell(g.subtotal_label))
+    rows.push(value-cell(money(data, g.subtotal)))
+    rows.push(label-cell(g.vat_label))
+    // A group that is not taxable has no figure: it names its treatment and shows a dash.
+    rows.push(value-cell(if g.vat_amount == none { [—] } else { money(data, g.vat_amount) }))
+    if g.note != none { rows.push(note-cell(g.note)) }
+  }
+  rows.push(table.hline(stroke: 0.7pt + navy))
+  rows.push(label-cell(data.totals.total_label, bold: true))
+  rows.push(value-cell(money(data, data.totals.total), bold: true))
+  rows.push(table.hline(stroke: 0.7pt + navy))
+
   table(
     columns: (1fr, 26mm, 18mm, 28mm),
     align: (left + top, right + top, right + top, right + top),
@@ -13,55 +53,9 @@
     inset: (x: 2mm, y: 2mm),
     table.header(
       repeat: true,
-      ..([#data.strings.description], [#data.strings.unit_price], [#data.strings.quantity], [#data.strings.price])
-        .map(c => text(weight: "bold", size: size-small, fill: muted, c)),
-      table.hline(stroke: 0.7pt + ink),
+      ..([#data.strings.description], [#data.strings.unit_price], [#data.strings.quantity], [#data.strings.price]).map(head),
+      table.hline(stroke: 0.7pt + navy),
     ),
-    ..data.items.map(it => (
-      [#it.description],
-      money(data, it.unit_price),
-      [#it.quantity],
-      money(data, it.amount),
-    )).flatten(),
-    table.hline(stroke: 0.5pt + rule),
+    ..rows,
   )
-}
-
-#let totals-block(data) = block(breakable: false, width: 100%, {
-  v(2mm)
-  set par(justify: false)
-  let row(label, value, bold: false) = grid(
-    columns: (1fr, 30mm),
-    column-gutter: 4mm,
-    align: (right, right),
-    text(weight: if bold { "bold" } else { "regular" }, fill: if bold { ink } else { muted })[#label],
-    text(weight: if bold { "bold" } else { "regular" })[#value #data.currency_symbol],
-  )
-  align(right, box(width: 78mm, {
-    row(data.strings.subtotal, data.totals.subtotal)
-    for l in data.totals.vat_lines { row(l.label, l.amount) }
-    v(1.5mm)
-    line(length: 100%, stroke: 0.7pt + ink)
-    v(1.5mm)
-    row(data.strings.total, data.totals.total, bold: true)
-  }))
-})
-
-// Legal VAT wording. The Slovenian text is printed alongside whenever it exists,
-// because it is the legally operative one.
-#let vat-notes(data) = {
-  if data.vat_notes.len() == 0 { return }
-  v(3mm)
-  block(breakable: false, {
-    set text(size: size-small)
-    set par(leading: 0.5em, justify: false)
-    for n in data.vat_notes {
-      text(n.primary)
-      if n.at("slovenian", default: none) != none {
-        linebreak()
-        text(fill: muted, style: "italic", n.slovenian)
-      }
-      v(1mm)
-    }
-  })
 }

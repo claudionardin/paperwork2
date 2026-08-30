@@ -1,5 +1,4 @@
 # Extracted from existing proforma documents. TODO verify.
-code: SPR
 legal_name: Stefano Perion
 short_name:
 address:
@@ -12,4 +11,3 @@ tax_code: PRNSFN93B01L424J
 is_business: false
 contact_person:
 email:
-notes: Consumer, Italian fiscal code only. Slovenian VAT 22% applies.

@@ -1,15 +1,47 @@
 # Copy to <CCC>.yaml where CCC is the 3 letter internal client code used in document numbers.
-code: XXX
+# The file name is the code, and it is written nowhere else: `client: "PRL"` on a document is
+# the path to this file. NUMBERING.md.
+#
+# Three fields decide the VAT case and nothing else in here does: `address.country` first,
+# then `vat_number` inside the EU, then `is_business` outside it. See CLAUDE.md, section VAT.
+# Everything below those is printed or is an address book.
+
 legal_name:
 short_name:             # optional, e.g. OGS. Used in the signature block, defaults to legal_name
+
 address:
   street:
   postal_code:
   city:
-  country:              # ISO 2 letters, drives the VAT rule
-vat_number:             # required for intra EU B2B exemption
-tax_code:               # codice fiscale / FC, for Italian individuals
-is_business: true       # false means consumer, Slovenian VAT applies
+  country:              # ISO 2 letters, where the client is established. Decides the VAT case
+                        # before anything else does. Note it is not where goods are delivered:
+                        # see the `deliver-to` entry in TODO.md
+
+# --- what the VAT rules read ---------------------------------------------------------------
+
+# Inside the EU this is what makes the client a business: without it the sale carries Slovenian
+# VAT whatever is_business says, because there is nothing to reverse the charge to.
+vat_number:
+
+# Deliberately absent: the date the id was checked in VIES. Validity is a fact of the day of
+# supply, so it is recorded per document as `vies-checked:` and demanded by the engine only
+# when a document actually claims the exemption. A date here would age into a false proof.
+
+# Read only outside the EU, where there is no VIES to check a counterparty against, and there
+# it is an assertion by the author. Mandatory for a non-EU client; the engine refuses rather
+# than assume. Goods sold outside the EU are an export either way.
+is_business: true
+
+tax_code:               # codice fiscale / FC, for an Italian individual. Printed in the party
+                        # block and used to identify the client in a clause when there is no
+                        # VAT number
+reg_number:             # company register number, if the client's country expects it on a
+                        # document. Printed when set, omitted when not
+
+# --- address book, never read by the engine -------------------------------------------------
+#
+# Only what you would look up. Anything you merely want to say about a client is a YAML comment,
+# which reads the same and does not pretend to be a field.
+
 contact_person:
 email:
-notes:

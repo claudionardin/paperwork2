@@ -19,6 +19,25 @@ signature:
   signed_on: "Firmato in data:"
   empty_date: __ / __ / ____
 
+# Testi fissi di pagamento e consegna. Le frasi sono le stesse per qualsiasi emittente; solo il
+# numero di giorni è un dato dell'emittente, e sta in config/issuers/<id>.yaml sotto `defaults`.
+# `within` riceve {{days}}.
+terms:
+  payment:
+    within: Si prega di effettuare il pagamento entro {{days}} giorni dalla data di emissione tramite bonifico bancario a
+    already_paid: Il presente documento è già stato saldato per intero. Nessun importo è dovuto.
+  delivery:
+    within: Entro {{days}} giorni dalla data di emissione
+    already_delivered: Consegna già effettuata
+
+# Stampato in fondo a ogni pagina, sopra la riga di registro dell'emittente.
+# TODO far confermare la traduzione italiana dell'informativa di riservatezza: è testo
+# contrattuale, e questa versione è una traduzione dell'inglese, non un testo approvato.
+footer:
+  confidentiality: >-
+    Le informazioni contenute nel presente documento sono riservate e destinate esclusivamente
+    al destinatario indicato.
+
 # Titoli dei documenti, per tipo.
 titles:
   "off": Offerta        # tra virgolette: off nudo e un booleano per un parser YAML 1.1
@@ -35,12 +54,11 @@ number_format:
 
 # Etichette fisse usate dai template.
 labels:
-  number: "N."
   supplier: "Fornitore:"
   customer: "Cliente:"
   description: Descrizione
   unit_price: Prezzo unitario
-  quantity: Quantita
+  quantity: Quantità
   price: Importo
   subtotal: Imponibile
   vat: IVA
@@ -48,6 +66,8 @@ labels:
   headed_to: Intestato a
   iban: IBAN
   swift: SWIFT/BIC
+  delivery_destination: Destinazione
+  delivery_terms: Termini di consegna
   page: Pagina
   vat_number: "P. IVA"
   tax_code: "Codice fiscale"
@@ -56,14 +76,3 @@ labels:
   share_capital: capitale sociale
   entered_on: iscritta il
 
-# Suffisso stampato nella riga di riepilogo IVA, per caso IVA di config/tax/vat.yaml.
-# Un valore vuoto non stampa alcun suffisso.
-vat_cases:
-  domestic: ""
-  eu_b2b_goods: cessione intracomunitaria
-  eu_b2b_service: inversione contabile
-  eu_b2c: ""
-  non_eu_b2c: ""
-  export_goods: esportazione
-  non_eu_service: fuori campo IVA slovena
-  public_administration: ""

@@ -6,6 +6,7 @@
 
 #let spec(
   body,
+  issuer: none,      // a file name in config/issuers/, without .yaml; none takes the default
   client: none,
   seq: none,
   revision: none,
@@ -14,7 +15,7 @@
 ) = {
   let data = build(
     tag: "spc",
-    client: client, seq: seq, revision: revision,
+    issuer: issuer, client: client, seq: seq, revision: revision,
     language: language, date: date,
   )
   doc-page(data, {

@@ -19,7 +19,7 @@
 #assert.eq(mul-qty(5800, 8000), 46400)
 #assert.eq(mul-qty(3333, 500), 1667) // 1666.5
 
-// VAT rate in percent, as stored in config/tax/vat.yaml. Same rounding.
+// VAT rate in percent, as stored in config/tax/<regime>.yaml. Same rounding.
 #assert.eq(vat-of(76400, 22.0), 16808)
 #assert.eq(vat-of(10000, 9.5), 950)
 #assert.eq(vat-of(1, 22.0), 0)

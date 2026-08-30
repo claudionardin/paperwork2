@@ -7,9 +7,10 @@
     columns: (1fr, auto),
     align: (left, right + bottom),
     {
-      text(size: size-title, weight: "bold")[#data.strings.title]
+      text(size: size-title, weight: "bold", fill: navy)[#data.strings.title]
       linebreak()
-      text(size: size-body, fill: muted)[#data.strings.number_label #data.number]
+      v(0.4mm)
+      text(size: size-body, fill: muted, tracking: 0.3pt)[#data.number]
     },
     {
       text(size: size-body)[#data.place_of_issue, #data.date]
@@ -50,6 +51,8 @@
   block(breakable: false, {
     v(2mm)
     text(data.payment.sentence)
+    // Nothing is due on an already paid document, so no bank details are printed.
+    if not data.payment.show_account { return }
     v(2mm)
     grid(
       columns: (auto, 1fr),
@@ -58,6 +61,21 @@
       text(fill: muted)[#data.strings.headed_to], text(weight: "bold")[#data.payment.holder],
       text(fill: muted)[#data.strings.iban], text(weight: "bold")[#data.payment.iban],
       text(fill: muted)[#data.strings.swift], text(weight: "bold")[#data.payment.swift],
+    )
+  })
+}
+
+// Where the goods go and when. Same two-column shape as the bank details above it.
+#let delivery-block(data) = {
+  if data.at("delivery", default: none) == none { return }
+  block(breakable: false, {
+    v(4mm)
+    grid(
+      columns: (auto, 1fr),
+      column-gutter: 4mm,
+      row-gutter: 0.6em,
+      text(fill: muted)[#data.strings.delivery_destination], text(weight: "bold")[#data.delivery.destination],
+      text(fill: muted)[#data.strings.delivery_terms], text(weight: "bold")[#data.delivery.terms],
     )
   })
 }

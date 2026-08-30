@@ -3,9 +3,14 @@
 #import "/doctypes/offer.typ": offer
 
 #show: offer.with(
+  issuer: "axelered_si",      // a file name in config/issuers/, without .yaml
   client: "PRL",              // a file name in config/clients/, without .yaml
   seq: 1,                     // progressive per (year, client), typed by hand
   revision: "a",              // "a" on the first version sent, then "b", "c"…
+  vies-checked: none,         // ISO date of the VIES check. It must equal `date` below:
+                              // a check made a week ago proves nothing about today.
+                              // Required only when the document exempts an intra-Community
+                              // supply, and then the engine refuses without it
   language: "it",             // "it" or "en"
   date: "2026-08-27",         // issue date, ISO. Must match the YYMMDD of the file name
   valid-until: "2026-09-30",

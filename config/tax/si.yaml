@@ -1,0 +1,96 @@
+# VAT clause wording for a Slovenian issuer, per case, per language. Selected by
+# `tax_regime: si` in the issuer profile; the rules that pick a case live in lib/vat.typ.
+# The engine picks a case key, then prints the wording in the document language. The Slovenian
+# text is kept for the day a Slovenian document is issued, and is not printed alongside.
+#
+# A case carries everything printed about it: `label`, the name of the treatment, and `clause`,
+# the article that justifies it, both per language. A jurisdiction is one file — adding a second
+# one never touches config/strings/, which holds no tax wording at all.
+#
+# Six cases, listed in the order lib/vat.typ evaluates them. That order is the specification:
+# destination first, because it never has an exception, then the axis that actually decides
+# inside that destination. Within the Union that axis is the customer's status, because the
+# exemption exists only where the tax is accounted for elsewhere in the common system, and
+# that needs an identified taxable person. Outside the Union there is no common system: goods
+# are exempt because they physically leave, services follow the customer. So the kind of line
+# outranks the customer's status abroad, and the reverse holds inside the Union.
+#
+# STATUS: PROVISIONAL WORDING, NOT VALIDATED BY AN ACCOUNTANT.
+# The texts cite the articles named in CLAUDE.md, but nobody has reviewed them. Have them
+# checked before the first document goes out, then delete this note. See TODO.md.
+
+# The only rate the engine can apply. Slovenia also has a 9.5% reduced and a 5% super-reduced
+# rate; neither is written here, because nothing in lib/ could reach them and a rate declared
+# but unreachable is a lie in a config file. See TODO.md.
+rates:
+  standard: 22.0
+
+cases:
+
+  b2b_si:
+    # 1. Slovenia to Slovenia, holder of a Slovenian VAT id, any kind. Taxable, no clause.
+    #    Public administration lands here too: e-invoicing through UJP is an obligation of
+    #    delivery, not a VAT treatment, and changes nothing printed on the sheet.
+    taxable: true
+    label: null       # a taxable group prints "VAT 22%", generated from the rate
+    clause: null
+
+  export_goods:
+    # 2. Goods the seller ships out of the Union. ZDDV-1 52(1)(a) attaches the exemption to
+    #    the goods leaving, not to who buys them, so a consumer abroad is an export as well.
+    taxable: false
+    label:
+      sl: "Oproščeno – izvoz"
+      en: "Exempt, export"
+      it: "Non imponibile, esportazione"
+    clause:
+      sl: "Oproščeno DDV po 1. točki 52. člena ZDDV-1."
+      en: "VAT exempt export of goods under Article 146 of Council Directive 2006/112/EC."
+      it: "Operazione non imponibile, esportazione ai sensi dell'art. 146 della Direttiva 2006/112/CE."
+
+  noneu_service:
+    # 3. Services to a business established outside the Union. The place of supply follows the
+    #    customer, so the supply is outside Slovenian VAT altogether: not an exemption, an
+    #    operation that was never Slovenian. The wording says so.
+    taxable: false
+    label:
+      sl: "Ni predmet slovenskega DDV"
+      en: "Outside the scope of Slovenian VAT"
+      it: "Fuori campo IVA slovena"
+    clause:
+      sl: "DDV ni obračunan po 1. odstavku 25. člena ZDDV-1."
+      en: "Not subject to Slovenian VAT: place of supply outside Slovenia under Article 44 of Council Directive 2006/112/EC."
+      it: "Operazione fuori campo IVA slovena: luogo della prestazione fuori dalla Slovenia ai sensi dell'art. 44 della Direttiva 2006/112/CE."
+
+  b2b_eu_goods:
+    # 4. Valid EU VAT id, goods leaving Slovenia for another member state.
+    taxable: false
+    label:
+      sl: "Oproščeno – dobava znotraj Unije"
+      en: "Exempt, intra-Community supply"
+      it: "Non imponibile, cessione intracomunitaria"
+    clause:
+      sl: "Oproščeno DDV po 1. točki 46. člena ZDDV-1."
+      en: "VAT exempt intra-Community supply of goods under Article 138(1) of Council Directive 2006/112/EC."
+      it: "Operazione non imponibile, cessione intracomunitaria ai sensi dell'art. 138, par. 1, della Direttiva 2006/112/CE."
+
+  b2b_eu_service:
+    # 5. Valid EU VAT id, general place of supply rule, reverse charge. The words "reverse
+    #    charge" are themselves a requirement of ZDDV-1 82(1) point 10, not a courtesy.
+    taxable: false
+    label:
+      sl: "Obrnjena davčna obveznost"
+      en: "Reverse charge"
+      it: "Inversione contabile"
+    clause:
+      sl: "DDV ni obračunan po 1. odstavku 25. člena ZDDV-1, obrnjena davčna obveznost."
+      en: "Reverse charge: VAT to be accounted for by the recipient under Articles 44 and 196 of Council Directive 2006/112/EC."
+      it: "Inversione contabile: imposta assolta dal destinatario ai sensi degli artt. 44 e 196 della Direttiva 2006/112/CE."
+
+  b2c:
+    # 6. The floor of the cascade: what is left once no rule of territoriality and no exemption
+    #    has taken the supply elsewhere. A consumer in Slovenia, and a consumer in the Union
+    #    below the distance-selling threshold. Slovenian VAT, no clause.
+    taxable: true
+    label: null       # a taxable group prints "VAT 22%", generated from the rate
+    clause: null

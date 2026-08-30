@@ -1,0 +1,22 @@
+# VAT clause wording for a UAE issuer, per case, per language.
+#
+# SKELETON: EMPTY ON PURPOSE. Nothing here has been written, and nothing may be guessed.
+# lib/vat.typ has no UAE rule set either: the two go together, and both have to be supplied
+# before `issuer: "axelered_ae"` can print anything. See TODO.md.
+#
+# What is needed, from an accountant registered in the UAE:
+#   - the standard rate (5% at the time of writing) and whatever reduced rates apply
+#   - the case keys the rules resolve to, which are NOT the Slovenian ones: a UAE issuer has
+#     zero-rated exports, designated-zone supplies and a reverse charge of its own
+#   - for every non-taxable case, both `label` (the name of the treatment, printed in the VAT
+#     row) and `clause` (the article behind it), in `en` and `it`, plus `ar` if a document ever
+#     has to be issued in Arabic. Nothing tax-related goes in config/strings/<lang>.yaml
+#
+# The shape below mirrors config/tax/si.yaml. Keys are illustrative placeholders: replace them
+# with the keys the UAE rule set actually resolves to.
+
+rates:
+  standard:                         # TODO 5.0, to be confirmed
+  zero: 0.0
+
+cases: {}         # TODO one per case: taxable: bool, label: {en, it}, clause: {en, it}

@@ -20,6 +20,23 @@ signature:
   signed_on: "Signed on:"
   empty_date: __ / __ / ____
 
+# Payment and delivery boilerplate. The sentences are the same for any issuer; only the number
+# of days is an issuer fact, and it lives in config/issuers/<id>.yaml under `defaults`.
+# `within` receives {{days}}.
+terms:
+  payment:
+    within: Please pay within {{days}} days of the issue date by bank transfer to
+    already_paid: This document is already paid in full. No payment is due.
+  delivery:
+    within: Within {{days}} days of the issue date
+    already_delivered: Already delivered
+
+# Printed at the foot of every page, above the issuer's registry line.
+footer:
+  confidentiality: >-
+    The information contained in these documents is confidential, privileged and only
+    for the information of the intended recipient.
+
 # Document titles, keyed by document type.
 titles:
   "off": Offer          # quoted: bare off is a boolean to a YAML 1.1 parser
@@ -36,7 +53,6 @@ number_format:
 
 # Fixed labels used by the templates.
 labels:
-  number: "No."
   supplier: "Supplier:"
   customer: "Customer:"
   description: Description
@@ -49,6 +65,8 @@ labels:
   headed_to: Headed to
   iban: IBAN
   swift: SWIFT/BIC
+  delivery_destination: Destination
+  delivery_terms: Delivery terms
   page: Page
   vat_number: "VAT no."
   tax_code: "Tax code"
@@ -57,14 +75,3 @@ labels:
   share_capital: share capital
   entered_on: entered on
 
-# Suffix printed in the VAT summary row, per VAT case of config/tax/vat.yaml.
-# An empty value prints no suffix.
-vat_cases:
-  domestic: ""
-  eu_b2b_goods: intra-Community supply
-  eu_b2b_service: reverse charge
-  eu_b2c: ""
-  non_eu_b2c: ""
-  export_goods: export
-  non_eu_service: outside the scope of Slovenian VAT
-  public_administration: ""

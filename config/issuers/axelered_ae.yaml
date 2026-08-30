@@ -1,0 +1,55 @@
+# Issuer profile — Axelered LLC, Dubai. SKELETON: no real data yet.
+#
+# Every value below marked TODO must be filled in from the trade licence and the bank before
+# this issuer prints a single document. The structure is the one of axelered_si.yaml, which is
+# the reference for what belongs in an issuer file and what belongs in strings/<lang>.yaml.
+#
+# Until the TODOs are filled in, `issuer: "axelered_ae"` fails to compile, and it should:
+# a document with a blank tax id or a blank IBAN is worse than no document.
+
+legal_name:                         # TODO exact name on the trade licence, e.g. Axelered LLC
+display_name:                       # TODO as it should read on the sheet
+address:
+  street:                           # TODO
+  postal_code:                      # TODO — Dubai has no postal codes; use "" and say so here
+  city: Dubai
+  country: AE
+vat_number:                         # TODO 15-digit UAE TRN, or leave empty if not registered
+reg_number:                         # TODO trade licence number
+place_of_issue: Dubai
+
+# UAE rules are not written. lib/vat.typ panics on this regime until they are, and
+# config/tax/ae.yaml holds the wording once an accountant supplies it.
+tax_regime: ae
+
+signatory:
+  name:                             # TODO who signs for the LLC
+  role:
+    en:                             # TODO e.g. Manager, as named on the licence
+    it:                             # TODO Italian rendering of the same role
+
+legal:
+  governing_law:                    # completes "governed by ... law" / "regolato dalla legge ..."
+    en:                             # TODO e.g. "UAE" — or "DIFC", if that is the choice
+    it:                             # TODO e.g. "degli Emirati Arabi Uniti"
+  forum:                            # TODO competent court, original language, not translated
+
+contacts:
+  website:                          # TODO
+  email:                            # TODO
+  phone:                            # TODO
+
+# The registry line in the page footer. A UAE LLC states different things from a Slovenian
+# d.o.o. — there is no SRG and no share capital in the Slovenian sense — so this list is
+# rewritten, not translated. `label` is a key of `labels` in config/strings/<lang>.yaml:
+# a label that does not exist there yet has to be added to every language file.
+footer:
+  registry: []                      # TODO e.g. trade licence no., registered agent, free zone
+
+bank_accounts: []                   # TODO at least one: id, holder, iban, swift, default: true
+
+defaults:
+  currency: AED                     # TODO confirm. Money is EUR-only today, see TODO.md
+  language: en
+  pay_within: 10
+  deliver_within: 10

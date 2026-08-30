@@ -3,6 +3,7 @@
 #import "/doctypes/spec.typ": spec
 
 #show: spec.with(
+  issuer: "axelered_si",      // a file name in config/issuers/, without .yaml
   client: "PRL",              // a file name in config/clients/, without .yaml
   seq: 1,                     // progressive per (year, client), typed by hand
   revision: "a",

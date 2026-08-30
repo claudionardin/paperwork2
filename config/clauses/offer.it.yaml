@@ -15,10 +15,10 @@
 # Never write the number in the body.
 #
 # Placeholders, substituted by the renderer:
-#   {{supplier.legal_name}}      Axelered d.o.o., from config/company.yaml
+#   {{supplier.legal_name}}      Axelered d.o.o., from config/issuers/<id>.yaml
 #   {{supplier.identification}}  computed: "con numero di partita IVA <vat> e sede in <address>"
-#   {{supplier.governing_law}}   "slovena", from company.yaml legal.governing_law
-#   {{supplier.forum}}           "Koper (Okrožno sodišče v Kopru), Slovenia", from company.yaml legal.forum
+#   {{supplier.governing_law}}   "slovena", from the issuer profile, legal.governing_law
+#   {{supplier.forum}}           "Okrožno sodišče v Kopru, Koper, Slovenia", from the issuer profile, legal.forum
 #   {{client.legal_name}}        from config/clients/<CCC>.yaml
 #   {{client.identification}}    computed, same rule as the supplier, falls back to
 #                                "con codice fiscale <tax_code> e sede in <address>" for an

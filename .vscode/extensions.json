@@ -1,0 +1,8 @@
+{
+  // Both are required by settings.json: tinymist is the Typst language server
+  // and formatter, vscode-yaml the formatter for config/.
+  "recommendations": [
+    "myriad-dreamin.tinymist",
+    "redhat.vscode-yaml"
+  ]
+}

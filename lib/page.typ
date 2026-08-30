@@ -1,6 +1,13 @@
 #import "tokens.typ": *
 
-// Header: logo left, contacts right aligned.
+// Decorative band across the very top of the sheet, edge to edge. Drawn as the page
+// background so it bleeds past the margins and repeats on every page.
+#let top-band() = place(top + left, dx: 0pt, dy: 0pt, block(width: 100%, height: band-height, {
+  place(left, rect(width: 100%, height: band-height, fill: navy))
+  place(right, rect(width: band-tail, height: band-height, fill: accent))
+}))
+
+// Header: logo left, contacts right aligned. No telephone number.
 #let doc-header(data) = {
   set text(size: size-small, fill: muted)
   grid(
@@ -8,17 +15,17 @@
     align: (left + horizon, right + horizon),
     {
       let logo = data.assets.at("logo", default: none)
-      if logo != none { image(logo, height: 11mm) } else { text(size: size-h1, weight: "bold", fill: ink)[#data.issuer.legal_name] }
+      if logo != none { image(logo, height: 7.5mm) } else { text(size: size-h1, weight: "bold", fill: navy)[#data.issuer.legal_name] }
     },
     {
       set par(leading: 0.5em)
-      let contacts = ("website", "email", "phone")
+      let contacts = ("website", "email")
         .map(k => data.issuer.at(k, default: none))
         .filter(v => v != none)
       contacts.map(v => text(v)).join(linebreak())
     },
   )
-  v(1mm)
+  v(1.4mm)
   line(length: 100%, stroke: 0.5pt + rule)
 }
 
@@ -44,6 +51,7 @@
   set page(
     paper: "a4",
     margin: page-margin,
+    background: top-band(),
     header: doc-header(data),
     header-ascent: 6mm,
     footer: doc-footer(data),

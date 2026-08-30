@@ -28,8 +28,8 @@ invoices, CMR notes. One `.typ` file per document, `typst compile`, done.
 The whole application is four things:
 
 1. **Layout** — Typst modules in `lib/`. The house style is written and working.
-2. **VAT** — `lib/vat.typ` decides which case applies, `config/tax/vat.yaml` holds the wording.
-3. **Data** — issuer in `config/company.yaml`, clients in `config/clients/<CCC>.yaml`.
+2. **VAT** — `lib/vat.typ` decides which case applies, `config/tax/<regime>.yaml` holds the wording.
+3. **Data** — issuers in `config/issuers/<id>.yaml`, clients in `config/clients/<CCC>.yaml`.
 4. **Language** — `en` or `it` per document, strings in `config/strings/<lang>.yaml`.
 
 **The only dependency is the `typst` binary.** No compiler, no package manager, no build step.
@@ -41,6 +41,7 @@ If a task seems to need a second tool, it is the wrong task.
 #import "/doctypes/offer.typ": offer
 
 #show: offer.with(
+  issuer: "axelered_si",
   client: "PRL", seq: 2, revision: "a",
   language: "it",
   date: "2026-08-19", valid-until: "2026-09-30",
@@ -64,8 +65,8 @@ inference — a missing `kind` is an error, because it decides the VAT treatment
 
 ```
 lib/          money.typ vat.typ page.typ tables.typ blocks.typ clauses.typ signature.typ
-doctypes/     offer.typ spec.typ proforma.typ invoice.typ cmr.typ — one per document type
-config/       company.yaml, clients/, clauses/, strings/, tax/vat.yaml
+doctypes/     offer.typ spec.typ invoice.typ cmr.typ — one per document type
+config/       issuers/, clients/, clauses/, strings/, tax/
 assets/       logo.svg, sign.png, fonts/
 documents/    templates/ (starters to copy) and YYYY/ (the real documents)
 tests/        assert-based, a test that compiles has passed
@@ -78,8 +79,38 @@ and `tests/` are the program's. `assets/` is fixed and `out/` is disposable.
 Logic lives in `lib/`, never in `doctypes/`. A doctype is ~20 lines calling functions: it names
 the blocks a document type is made of, in order, and nothing else.
 
+An invoice and a proforma are the same sheet, so there is one doctype and one starter for the
+two: `proforma: true` switches the tag to `pin` and the title with it. `revision` is a letter on
+a proforma and empty on an invoice.
+
 `doctypes/` is code and is never edited to write a document. `documents/templates/` holds the
 starter files an author copies into `documents/YYYY/`.
+
+## Issuer, language, and where a piece of text lives
+
+Three independent axes, one home each. Getting this wrong is how a file turns into a mess of
+half-translated facts.
+
+| Axis | Chosen by | Home | Holds |
+|---|---|---|---|
+| Issuer | `issuer:` on the document | `config/issuers/<id>.yaml` | names, address, tax ids, bank accounts, registry footer, house defaults, `tax_regime` |
+| Language | `language:` on the document | `config/strings/<lang>.yaml` | every fixed sentence and label printed on a sheet |
+| Client | `client:` on the document | `config/clients/<CCC>.yaml` | the buyer, and the facts the VAT rules read |
+
+An issuer file carries no boilerplate and a strings file carries no facts. A field that varies
+on **both** axes — a fragment of prose naming this issuer — carries a per-language map in the
+issuer file. There are exactly two: `signatory.role` and `legal.governing_law`. Anything else
+bilingual in an issuer file is a bug.
+
+Proper names — cities, courts, registries — stay in their original language and are never
+translated. `Sežana`, `Okrožno sodišče v Kopru`.
+
+`issuer:` is optional; omitted, a document takes `default-issuer` in `lib/model.typ`, which is
+`axelered_si`. The starters write it out anyway, so the author sees which company is signing.
+
+A second issuer is a second file plus its tax regime: `config/issuers/axelered_ae.yaml` and
+`config/tax/ae.yaml` exist as skeletons, and `lib/vat.typ` has a `resolve-ae` that panics until
+someone writes the rules. Both are all TODO — no UAE data has been supplied yet.
 
 ## Commands
 
@@ -93,25 +124,69 @@ Validation is compilation: an unresolvable case calls `panic()` and no PDF comes
 
 ## VAT
 
-| Case | Kind | Treatment | Key |
+Six cases, and the **order** they are tried in is the rule. Destination decides first, because
+it has no exception. Then each destination picks its own second axis, and the two are not the
+same: inside the Union the customer's status comes before the kind of the line, outside it the
+kind comes before the status.
+
+| # | Condition | Treatment | Key |
 |---|---|---|---|
-| SI → SI | any | Slovenian VAT 22% | `domestic` |
-| SI → EU, VAT ID, B2B | goods | Exempt, intra-Community supply | `eu_b2b_goods` |
-| SI → EU, VAT ID, B2B | service | Reverse charge | `eu_b2b_service` |
-| SI → EU, no VAT ID, B2C | any | Slovenian VAT 22% | `eu_b2c` |
-| SI → non-EU, B2B | goods | Exempt, export | `export_goods` |
-| SI → non-EU, B2B | service | Outside SI scope | `non_eu_service` |
-| SI → non-EU, B2C | any | Slovenian VAT 22% | `non_eu_b2c` |
-| SI → SI public administration | any | Slovenian VAT 22% | `public_administration` |
+| 1 | SI → SI, VAT ID | Slovenian VAT 22% | `b2b_si` |
+| 2 | SI → non-EU, goods | Exempt, export — **B2B and B2C alike** | `export_goods` |
+| 3 | SI → non-EU, service, B2B | Outside SI scope | `noneu_service` |
+| 4 | SI → non-EU, service, B2C | `panic()` — ZDDV-1 30.d vs 25(2), see below | — |
+| 5 | SI → EU, VAT ID, goods | Exempt, intra-Community supply | `b2b_eu_goods` |
+| 6 | SI → EU, VAT ID, service | Reverse charge | `b2b_eu_service` |
+| 7 | anything left | Slovenian VAT 22% | `b2c` |
 
-Every B2C sale carries Slovenian VAT, wherever the buyer lives. Only a business, and only with
-a VAT ID inside the EU, moves the tax off the invoice.
+Why that asymmetry: inside the Union the exemption exists only because the tax is accounted for
+elsewhere in the common system, which needs an identified taxable person — so the VAT ID is
+tested first. Outside the Union there is no common system: goods are exempt because they
+physically leave (ZDDV-1 52(1)(a), which says nothing about who buys), services follow the
+customer. **`b2c` is not a case, it is the floor of the cascade** — what is left once no rule of
+territoriality and no exemption has taken the supply somewhere else.
 
-- `lib/vat.typ` resolves a key. `config/tax/vat.yaml` turns the key into `taxable` plus the
-  clause text in `sl`/`en`/`it`. No legal wording in Typst, no rules in YAML.
-- Mixed documents: one VAT summary row per treatment.
-- Exemptions print the Slovenian wording alongside the document language — that text is the
-  legally operative one.
+Row 4 refuses on purpose. A service to a consumer outside the EU is outside Slovenian VAT if it
+falls under the closed list of ZDDV-1 30.d (consultancy, engineering, data processing,
+licensing — most of what this company sells) and Slovenian VAT if it does not, and a document
+carries nothing that tells the two apart.
+
+Cases 5 and 6 demand `vies-checked: "YYYY-MM-DD"` on the document and refuse without it. Both
+hold only if the client's VAT id was valid in VIES on the day of supply, and that is a fact of
+the day rather than of the client: a company registered in March can be struck off in September,
+so the date is recorded per document and never in `config/clients/`. It **must equal `date:`**,
+because a check made a week ago proves nothing about today: the field therefore carries no
+information the document does not already have, and that is the whole of it — it cannot be
+filled in without querying VIES and cannot be left to age. Evidence, not wording: never printed.
+
+Public administration is `b2b_si`: e-invoicing through UJP is an obligation of delivery, not a
+VAT treatment, and changes nothing printed on the sheet.
+
+Three cases are knowingly out of scope, because no data on a document could decide them. Each
+is a `TODO.md` entry and a comment at the branch it would belong to: domestic reverse charge
+(76.a), goods installed at destination in another member state (20(3)), and the 10,000 EUR
+distance-selling threshold (30.f), which is a fact of the year rather than of the document.
+
+- `lib/vat.typ` resolves a key, one rule set per issuing jurisdiction, dispatched on the
+  issuer country. `config/tax/<regime>.yaml` turns the key into `taxable` plus two pieces of
+  wording in `sl`/`en`/`it`: `label`, the name of the treatment, and `clause`, the article
+  behind it. No legal wording in Typst, no rules in YAML, **and no tax wording in
+  `config/strings/`** — a jurisdiction is one file, so a second issuer never touches a language
+  file. `tests/config.typ` holds the two halves together.
+- A taxable group prints `VAT 22%` and its figure. A group that is not taxable prints the name
+  of its treatment and **no figure at all** — never `VAT 0%`, which would read as Slovenia
+  having taxed an intra-Community supply at zero. Only one rate exists, `rates.standard`:
+  Slovenia's reduced rates are not in the file because nothing in `lib/` could reach them.
+- The items table is grouped by treatment: each group closes with its own taxable base, its
+  own VAT line and the clause that justifies it, then the grand total closes the table. A
+  document with one treatment simply prints one group. **VAT is charged on the base of the
+  group, never line by line** — one rounding per group, which is what an accountant recomputes.
+  A discount is an ordinary negative line and carries a `kind` like any other, so it lands in
+  one group and lowers that base alone; a discount meant for the whole sheet is written as one
+  line per treatment. One client fixes the country and the VAT id, so a real document can never
+  mix a taxable group with an exempt one — every mix is two exempt groups.
+- The clause is printed in the document language only. Slovenian is kept in `vat.yaml` for the
+  day a Slovenian document is issued, and is no longer printed alongside.
 - Unresolvable ⇒ `panic()`. Never default to taxable or exempt.
 - An exemption whose clause text is empty for the document language is an error too, not a
   silent blank line.
@@ -140,12 +215,24 @@ offer is saved by hand with a `_signed` suffix — that is the only document sta
 ## State
 
 Built and rendering real documents: `lib/` (money, vat, model, and the six layout modules),
-`doctypes/` for offer, spec, proforma and invoice, the starters in `documents/templates/`, and
-`render.sh` / `render.ps1`. `tests/money.typ` and `tests/vat.typ` pass — they are the
-specification, and a test that compiles has passed.
+`doctypes/` for offer, spec and invoice (which prints the proforma too), the starters in
+`documents/templates/`, and
+`render.sh` / `render.ps1`. Four test files, and they are the specification:
+
+| File | Covers |
+|---|---|
+| `tests/money.typ` | cents, rounding, formatting |
+| `tests/vat.typ` | the cascade, branch by branch |
+| `tests/groups.typ` | `vat-groups`: bases, one rounding per group, order, labels, clauses, discounts |
+| `tests/config.typ` | the seam — the keys `lib/vat.typ` returns are exactly the ones `config/tax/` declares |
+
+A test that compiles has passed. Run all four before touching anything tax-related.
+
+Multi-issuer is wired end to end: profiles, tax regime, bank accounts and footer are all read
+per document. Only Slovenia is filled in.
 
 Left to build: `doctypes/cmr.typ`, which needs a consignment data block that does not exist in
-`config/` yet. See `TODO.md`.
+`config/` yet, and the UAE issuer — data, VAT rules and wording. See `TODO.md`.
 
 ## Rules
 
@@ -162,7 +249,7 @@ Renders, but nobody has checked it. Before anything goes to a client:
 
 | What | Who |
 |---|---|
-| `config/tax/vat.yaml` — six exemption clauses | the accountant |
+| `config/tax/si.yaml` — four clauses and four treatment labels | the accountant |
 | `config/clauses/offer.{en,it}.yaml` — 23 clauses each | holder of the original contract, then a lawyer |
 | `assets/fonts/` — Noto Sans stands in for the brand fonts | — |
 | Brand colours — missing, `lib/tokens.typ` uses greys | — |
