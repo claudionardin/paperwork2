@@ -1,5 +1,6 @@
 // Offer. The proforma sheet, then the prose, then the numbered clauses, then the dual
-// signature block.
+// signature block. The clause block is fixed: config/clauses/offer.<lang>.yaml, all of it,
+// in order. A document neither chooses nor reorders it.
 #import "/lib/model.typ": build
 #import "/lib/page.typ": doc-page
 #import "/lib/blocks.typ": title-block, parties-block, payment-block, delivery-block
@@ -17,7 +18,6 @@
   date: none,
   valid-until: none,
   items: (),
-  clauses: (),
   vies-checked: none, // required when the document exempts an intra-Community supply
   signature: true,
   pay-within: auto,
@@ -29,7 +29,7 @@
     tag: "off",
     issuer: issuer, client: client, seq: seq, revision: revision,
     language: language, date: date, valid-until: valid-until,
-    items: items, clauses: clauses, vies-checked: vies-checked, signature: signature,
+    items: items, vies-checked: vies-checked, signature: signature,
     pay-within: pay-within, bank-account: bank-account,
     deliver-to: deliver-to, deliver-within: deliver-within,
   )
@@ -41,7 +41,7 @@
     delivery-block(data)
 
     if body != none { pagebreak() + body }
-    if data.clauses.len() > 0 { pagebreak() + clauses-block(data) }
+    pagebreak() + clauses-block(data)
     if data.signature != none { signature-block(data) }
   })
 }

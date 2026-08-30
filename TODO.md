@@ -37,13 +37,18 @@ sells today; if one becomes real, it needs a field before it needs a rule.
 | What | Who |
 |---|---|
 | `config/tax/si.yaml` — four exemption clauses | the accountant |
-| `config/clauses/offer.{en,it}.yaml` — 29 clauses each | holder of the original contract, then a lawyer |
+| `config/clauses/offer.en.yaml` — 23 clauses | Done: transcribed verbatim from the signed offer SDS24-01F. Not to be reworded. |
+| `config/clauses/offer.it.yaml` — 23 clauses | holder of the original contract, then a lawyer |
+| English clause 22 has no forum sentence, the Italian one does | The English original stops at the governing law; the Italian text also names `{{supplier.forum}}` as the exclusive forum. The two languages therefore differ in substance. A lawyer decides which one is right, then the other follows. |
+| Clause 23 no longer states the page count | The original read "This Document has 7 pages." — a hand-typed number nothing generated can keep true. Dropped on purpose. |
 
 ## Config gaps found while rendering the first documents
 
 | What | Note |
 |---|---|
 | `doctypes/cmr.typ` | Not written. See the CMR entry above. |
+| Country printed inside a clause | `address.country` holds the ISO code, which the VAT cascade needs, so clause 1 prints "6210 Sezana, SI" where the original read "Sezana 6210, Slovenija". A printable country name would be a second field on the address. |
+| `config/issuers/axelered_si.yaml` — `signatory.role` | Reads "Legal representative" / "Legale rappresentante"; the signed offers are signed "CEO at Axelered Doo". Pick one. |
 | `config/strings/<lang>.yaml` — `footer.confidentiality` | The Italian text is a translation of the English one, not an approved wording. Have it confirmed. |
 | Slovenian `config/strings/sl.yaml` | Does not exist. `config/tax/si.yaml` already carries the Slovenian VAT clauses for the day a Slovenian document is issued; the labels and boilerplate would have to follow. |
 

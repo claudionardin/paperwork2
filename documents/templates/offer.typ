@@ -14,7 +14,6 @@
   language: "it",             // "it" or "en"
   date: "2026-08-27",         // issue date, ISO. Must match the YYMMDD of the file name
   valid-until: "2026-09-30",
-  clauses: ("contract", "subject", "fixed_price", "validity", "governing_law"),
   items: (
     // kind is mandatory: "service" or "goods". It decides the VAT treatment.
     (desc: "Analisi tecnica e architettura", price: 1500.00, qty: 1, kind: "service"),

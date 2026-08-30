@@ -152,11 +152,11 @@
 
 // --- clauses -----------------------------------------------------------------------------
 
-// Filter to the clauses the document asked for, order them, and number them 1..N over what is
-// actually printed, so dropping a clause never leaves a hole. Section headings come from the
-// same file; the placeholders are substituted here, never stored substituted.
-#let build-clauses(ids, language, co, client, strings) = {
-  if ids.len() == 0 { return () }
+// The clause block is fixed: every offer prints every clause of the file for its language, in
+// section and weight order, numbered 1..N. A document does not choose its clauses. Section
+// headings come from the same file; the placeholders are substituted here, never stored
+// substituted.
+#let build-clauses(language, co, client, strings) = {
   let source = yaml("/config/clauses/offer." + language + ".yaml")
   let section-title = (:)
   let section-weight = (:)
@@ -178,13 +178,7 @@
     },
   )
 
-  let chosen = ()
-  for id in ids {
-    let found = source.clauses.filter(c => c.id == id)
-    if found.len() == 0 { panic("no clause with id \"" + id + "\" in offer." + language + ".yaml") }
-    chosen.push(found.first())
-  }
-  chosen = chosen.sorted(key: c => (section-weight.at(c.section), c.weight))
+  let chosen = source.clauses.sorted(key: c => (section-weight.at(c.section), c.weight))
 
   chosen.enumerate(start: 1).map(((number, c)) => (
     number: number,
@@ -206,7 +200,6 @@
   date: none,
   valid-until: none,
   items: (),
-  clauses: (),
   vies-checked: none,
   signature: false,
   pay-within: none,
@@ -376,7 +369,8 @@
       total_label: labels.total,
     ),
 
-    clauses: build-clauses(clauses, language, co, client-record, strings),
+    // The contract clauses belong to the offer alone, and it prints all of them.
+    clauses: if tag == "off" { build-clauses(language, co, client-record, strings) } else { () },
     payment: payment,
     delivery: delivery,
     signature: if not signature { none } else {

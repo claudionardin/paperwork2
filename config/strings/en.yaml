@@ -1,22 +1,26 @@
 # Fixed strings, English. Templates never contain literal text, they look it up here.
 # Placeholders use the same {{...}} syntax as the clause bodies.
-# TODO confirm the English wording against the existing offer PDFs.
+# The wording of the identification sentence and of the signature block is the one of the
+# signed offer SDS24-01F, so that clause 1 reads exactly as it does in the original contract.
 
 # Used to build {{supplier.identification}} and {{client.identification}}.
-# The renderer picks the first case that the party data supports.
+# The renderer picks the first case that the party data supports. The sentence follows the
+# party name directly, with no comma: "Axelered d.o.o. with a VAT number of ... and an
+# address of ...".
 identification:
-  with_vat: VAT number {{vat_number}}, with registered office at {{address}}
-  with_tax_code: tax code {{tax_code}}, with registered office at {{address}}
-  address_only: with registered office at {{address}}
+  with_vat: with a VAT number of {{vat_number}} and an address of {{address}}
+  with_tax_code: with a tax code of {{tax_code}} and an address of {{address}}
+  address_only: with an address of {{address}}
 
 # Dual signature block appended to an offer when the frontmatter has `signature: true`.
+# The defined terms are "Provider" and "Client", as in the English clauses.
 signature:
   intro: >-
-    The Parties accept the terms and conditions set out above, as evidenced by their
-    respective signatures:
-  supplier_party: (Supplier)
-  client_party: (Customer)
-  representative_of: "{{role}} of {{party}}"
+    The Parties agree to the terms and conditions set forth above as demonstrated by their
+    signatures as follows:
+  supplier_party: (Provider)
+  client_party: (Client)
+  representative_of: "{{role}} at {{party}}"   # e.g. "CEO at Axelered d.o.o.", as in the original
   signed_on: "Signed on:"
   empty_date: __ / __ / ____
 

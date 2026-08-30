@@ -45,7 +45,6 @@ If a task seems to need a second tool, it is the wrong task.
   client: "PRL", seq: 2, revision: "a",
   language: "it",
   date: "2026-08-19", valid-until: "2026-09-30",
-  clauses: ("contract", "validity", "ip"),
   items: (
     (desc: "Analisi tecnica e architettura", price: 1500.00, qty: 1, kind: "service"),
     (desc: "Server rack 2U",                 price: 2200.00, qty: 2, kind: "goods"),
@@ -58,6 +57,9 @@ Il fornitore si impegna a *consegnare*...
 ```
 
 The author writes prose and items. Totals, VAT and legal clauses are computed, never typed.
+The clause block is fixed: an offer prints all 23 clauses of `config/clauses/offer.<lang>.yaml`,
+in order, numbered 1..23. A document neither selects nor reorders them, and the English bodies
+are the originals transcribed from the signed offer SDS24-01F — they are not to be reworded.
 `kind` is mandatory on every item, `"goods"` or `"service"`. There is no default and no
 inference — a missing `kind` is an error, because it decides the VAT treatment.
 
@@ -250,7 +252,7 @@ Renders, but nobody has checked it. Before anything goes to a client:
 | What | Who |
 |---|---|
 | `config/tax/si.yaml` — four clauses and four treatment labels | the accountant |
-| `config/clauses/offer.{en,it}.yaml` — 23 clauses each | holder of the original contract, then a lawyer |
+| `config/clauses/offer.it.yaml` — 23 clauses | holder of the original contract, then a lawyer. The English file is the verified original |
 | `assets/fonts/` — Noto Sans stands in for the brand fonts | — |
 | Brand colours — missing, `lib/tokens.typ` uses greys | — |
 
