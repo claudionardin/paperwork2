@@ -1,5 +1,5 @@
-// STARTER — offer. Copy to documents/<year>/<number>.typ and rename to the number you chose.
-// Tag "off". Carries a revision letter. See NUMBERING.md.
+// STARTER — offer. Copy to documents/<YYMM_project>/<number>.typ and rename to the number you
+// chose. Tag "off". Carries a revision letter. See NUMBERING.md.
 #import "/doctypes/offer.typ": offer
 
 #show: offer.with(

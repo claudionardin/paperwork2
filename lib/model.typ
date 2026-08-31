@@ -127,11 +127,11 @@
     let amount = if taxable { vat-of(base, rate) } else { none }
     if taxable { total-vat += amount }
 
-    // A taxable group prints the rate it was charged at. A group that is not taxable prints
-    // the name of its treatment and no figure at all: an intra-Community supply is not
-    // zero-rated and an out-of-scope service is not taxed, so a printed "0%" would invite the
-    // reader to believe Slovenia taxed them at zero.
-    let vat-label = if taxable { labels.vat + " " + pct(rate) + "%" } else { wording("label") }
+    // Every group prints the same line: the word VAT and the figure actually charged. A
+    // taxable group adds the rate it was charged at; a group that is not taxable charges
+    // nothing and says so with a figure of zero. What the treatment IS stays underneath, in
+    // the clause, which is where the reader looks for the reason.
+    let vat-label = if taxable { labels.vat + " " + pct(rate) + "%" } else { labels.vat }
 
     // Numbered only when there is more than one treatment to tell apart.
     let subtotal-label = if cases.len() == 1 { labels.subtotal } else {
@@ -143,7 +143,7 @@
       subtotal: money(base),
       subtotal_label: subtotal-label,
       vat_label: vat-label,
-      vat_amount: if taxable { money(amount) } else { none },
+      vat_amount: money(if taxable { amount } else { 0 }),
       note: if taxable { none } else { wording("clause") },
     ))
   }

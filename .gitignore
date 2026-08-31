@@ -1,4 +1,6 @@
-# Rendered PDFs. The source is the document; the PDF is a build artefact.
+# Test renders and scratch output. Documents are not rendered here any more: their PDF is
+# written next to the source, inside the project folder, and is committed with it — a project
+# folder is the whole project, readable without a typst binary. Do not ignore *.pdf.
 out/
 
 .DS_Store

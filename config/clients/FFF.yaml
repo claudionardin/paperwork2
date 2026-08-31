@@ -1,0 +1,22 @@
+# FIXTURE — invented client, never invoice it. See FIXTURES.md.
+#
+# Case 7: a consumer elsewhere in the Union ⇒ b2c, Slovenian VAT 22%. Same outcome as BBB by a
+# different road, and the fixture the distance-selling threshold of ZDDV-1 30.f would break
+# first if it were ever implemented. is_business: true with no VAT id is deliberate — inside
+# the Union the id decides, the client's word does not.
+#
+# Also the only fixture carrying a tax code and no VAT number, which is the second branch of
+# `identification` in lib/model.typ and the tax-code line of the party block.
+legal_name: Fenice Ricerche Srl
+short_name: Fenice
+address:
+  street: Via Roma 4
+  postal_code: "34121"
+  city: Trieste
+  country: IT
+vat_number:
+tax_code: "01111111119"
+reg_number:
+is_business: true
+contact_person:
+email:

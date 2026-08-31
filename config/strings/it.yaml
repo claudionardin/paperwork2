@@ -53,9 +53,10 @@ number_format:
   decimal: ","
 
 # Etichette fisse usate dai template.
+# Le due intestazioni di parte usano le stesse parole delle clausole: Fornitore e Cliente.
 labels:
   supplier: "Fornitore:"
-  customer: "Cliente:"
+  client: "Cliente:"
   description: Descrizione
   unit_price: Prezzo unitario
   quantity: Quantità

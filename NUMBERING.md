@@ -31,11 +31,16 @@ Document number and file name are the same string.
 5. An invoice number is never reused, never deleted, never reissued with different content. Corrections go through a credit note.
 6. Gaps in `NNN` are allowed for offers, specs and proformas. Not for invoices.
 7. A CMR exists only where goods are shipped.
-8. `.typ` source and PDF share the name. A countersigned offer is saved by hand as `<number>_signed`.
+8. `.typ` source and PDF share the name **and the folder** — the PDF is rendered next to its source, inside the project folder. A countersigned offer is saved by hand as `<number>_signed`.
 9. The template recomputes the number from `date`, `type`, `client`, `seq`, `revision` and asserts it equals the file name. Mismatch ⇒ `panic()`.
 
 Which number a document takes is the author's call, made when the document is written. Nothing
 in this repository links one document to another or checks a relationship between them.
+
+The number says nothing about where the file lives. Documents are filed by project —
+`documents/YYMM_project/`, see `CLAUDE.md` — and the renderer finds a bare number by searching
+`documents/` at any depth, so **a number must be unique across the whole tree**: two files
+carrying it make the shorthand refuse.
 
 ## Open
 

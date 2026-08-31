@@ -1,0 +1,19 @@
+# FIXTURE — invented client, never invoice it. See FIXTURES.md.
+#
+# Cases 2 and 4: outside the Union, consumer. Goods ⇒ export_goods, because ZDDV-1 52(1)(a)
+# hangs the exemption on the goods leaving and not on who buys. A service line on a document
+# for this client makes the engine panic on purpose (30.d vs 25(2)), so DDD is also the fixture
+# that proves the refusal still fires.
+legal_name: Dana Doyle
+short_name:
+address:
+  street: 500 Terry Francois Blvd
+  postal_code: "94158"
+  city: San Francisco
+  country: US
+vat_number:
+tax_code:
+reg_number:
+is_business: false
+contact_person:
+email:

@@ -1,6 +1,6 @@
 // STARTER — invoice and proforma invoice. They are the same sheet, so they share one starter:
-// `proforma` decides which one it is. Copy to documents/<year>/<number>.typ and rename to the
-// number you chose. See NUMBERING.md.
+// `proforma` decides which one it is. Copy to documents/<YYMM_project>/<number>.typ and rename
+// to the number you chose. See NUMBERING.md.
 #import "/doctypes/invoice.typ": invoice
 
 #show: invoice.with(

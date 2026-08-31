@@ -60,6 +60,10 @@ The author writes prose and items. Totals, VAT and legal clauses are computed, n
 The clause block is fixed: an offer prints all 23 clauses of `config/clauses/offer.<lang>.yaml`,
 in order, numbered 1..23. A document neither selects nor reorders them, and the English bodies
 are the originals transcribed from the signed offer SDS24-01F — they are not to be reworded.
+One deviation is recorded and deliberate: the issuing party is the `Supplier`, not the
+`Provider` of the original, so a single word names it in the clauses, in the party heading and
+in the signature block. **The two parties are the Supplier and the Client, in both languages —
+`Fornitore` and `Cliente` — and no synonym for either appears anywhere.**
 `kind` is mandatory on every item, `"goods"` or `"service"`. There is no default and no
 inference — a missing `kind` is an error, because it decides the VAT treatment.
 
@@ -70,13 +74,21 @@ lib/          money.typ vat.typ page.typ tables.typ blocks.typ clauses.typ signa
 doctypes/     offer.typ spec.typ invoice.typ cmr.typ — one per document type
 config/       issuers/, clients/, clauses/, strings/, tax/
 assets/       logo.svg, sign.png, fonts/
-documents/    templates/ (starters to copy) and YYYY/ (the real documents)
+documents/    templates/ (starters to copy), YYMM_project/ (the real work), fixtures/ (invented ones)
 tests/        assert-based, a test that compiles has passed
-out/          git ignored
+out/          test renders only, git ignored
 ```
 
 Seven directories, seven roles. `config/` and `documents/` are the author's. `lib/`, `doctypes/`
 and `tests/` are the program's. `assets/` is fixed and `out/` is disposable.
+
+**`documents/` is organised by project, not by year.** One folder per project,
+`YYMM_project` — the month the project started, then its name: `2608_prl`. Inside it live all
+the sheets that project produces, offer, spec, proforma, invoice and CMR together, at whatever
+depth suits it. **The PDF is written next to the source it came from** and is committed with
+it, so a project folder is the whole project, readable without a typst binary. Nothing in the
+tree is keyed to the year: `documents/2026/` survives from the previous scheme and is left
+alone, and the renderer finds a document by searching, not by computing a path.
 
 Logic lives in `lib/`, never in `doctypes/`. A doctype is ~20 lines calling functions: it names
 the blocks a document type is made of, in order, and nothing else.
@@ -86,7 +98,7 @@ two: `proforma: true` switches the tag to `pin` and the title with it. `revision
 a proforma and empty on an invoice.
 
 `doctypes/` is code and is never edited to write a document. `documents/templates/` holds the
-starter files an author copies into `documents/YYYY/`.
+starter files an author copies into a project folder.
 
 ## Issuer, language, and where a piece of text lives
 
@@ -117,12 +129,22 @@ someone writes the rules. Both are all TODO — no UAE data has been supplied ye
 ## Commands
 
 ```sh
-typst compile --font-path assets/fonts --root . documents/2026/260819offPRL002a.typ out/260819offPRL002a.pdf
-typst watch   --font-path assets/fonts --root . documents/2026/260819offPRL002a.typ out/260819offPRL002a.pdf
+.\render.ps1 260819offPRL002a            # compile, PDF next to the source
+.\render.ps1 -Watch 260819offPRL002a     # live preview
+./render.sh --watch 260819offPRL002a     # the POSIX twin, keep the two in step
 ```
 
-`typst watch` is the live preview. Wrap both in `render.sh` / `render.ps1`, three lines each.
-Validation is compilation: an unresolvable case calls `panic()` and no PDF comes out.
+A bare number is enough: the renderer searches `documents/` for `<number>.typ` at any depth,
+and refuses if the number is missing or matches twice. An explicit path also works and is the
+only way to render something the search cannot name. Underneath it is one call:
+
+```sh
+typst compile --font-path assets/fonts --root . --input document=260819offPRL002a \
+  documents/2608_prl/260819offPRL002a.typ documents/2608_prl/260819offPRL002a.pdf
+```
+
+`typst watch` is the live preview. Validation is compilation: an unresolvable case calls
+`panic()` and no PDF comes out.
 
 ## VAT
 
@@ -164,6 +186,12 @@ filled in without querying VIES and cannot be left to age. Evidence, not wording
 Public administration is `b2b_si`: e-invoicing through UJP is an obligation of delivery, not a
 VAT treatment, and changes nothing printed on the sheet.
 
+Seven invented clients, `AAA`..`GGG` in `config/clients/`, reach every branch of the cascade —
+refusals included — from a real sheet, one document each in `documents/fixtures/`. The tests
+assert the key; the fixtures print the group, the label, the clause and the total.
+**`FIXTURES.md`** — which one is which, and the three that must refuse to compile. Never
+invoice one and never copy one into a project folder.
+
 Three cases are knowingly out of scope, because no data on a document could decide them. Each
 is a `TODO.md` entry and a comment at the branch it would belong to: domestic reverse charge
 (76.a), goods installed at destination in another member state (20(3)), and the 10,000 EUR
@@ -171,14 +199,16 @@ distance-selling threshold (30.f), which is a fact of the year rather than of th
 
 - `lib/vat.typ` resolves a key, one rule set per issuing jurisdiction, dispatched on the
   issuer country. `config/tax/<regime>.yaml` turns the key into `taxable` plus two pieces of
-  wording in `sl`/`en`/`it`: `label`, the name of the treatment, and `clause`, the article
-  behind it. No legal wording in Typst, no rules in YAML, **and no tax wording in
-  `config/strings/`** — a jurisdiction is one file, so a second issuer never touches a language
-  file. `tests/config.typ` holds the two halves together.
-- A taxable group prints `VAT 22%` and its figure. A group that is not taxable prints the name
-  of its treatment and **no figure at all** — never `VAT 0%`, which would read as Slovenia
-  having taxed an intra-Community supply at zero. Only one rate exists, `rates.standard`:
-  Slovenia's reduced rates are not in the file because nothing in `lib/` could reach them.
+  wording in `sl`/`en`/`it`: `clause`, the article behind the treatment, which is printed, and
+  `label`, its name, which is kept in the file but no longer printed. No legal wording in
+  Typst, no rules in YAML, **and no tax wording in `config/strings/`** — a jurisdiction is one
+  file, so a second issuer never touches a language file. `tests/config.typ` holds the two
+  halves together.
+- **Every group prints the same VAT line: the word `VAT`/`IVA` and the figure charged.** A
+  taxable group adds the rate — `VAT 22%` — and its amount; a group that is not taxable charged
+  nothing and prints `0.00 €`. What the treatment *is* stays underneath, in the clause, which is
+  where the reader looks for the reason. Only one rate exists, `rates.standard`: Slovenia's
+  reduced rates are not in the file because nothing in `lib/` could reach them.
 - The items table is grouped by treatment: each group closes with its own taxable base, its
   own VAT line and the clause that justifies it, then the grand total closes the table. A
   document with one treatment simply prints one group. **VAT is charged on the base of the
@@ -195,7 +225,8 @@ distance-selling threshold (30.f), which is a fact of the year rather than of th
 
 ## Money
 
-EUR only, two decimals always, including `.00`. **Integer cents everywhere.** Float arithmetic
+EUR only, printed as `€` after the figure, two decimals always, including `.00`. The symbol is
+`defaults.currency` in the issuer profile. **Integer cents everywhere.** Float arithmetic
 is the one way this design silently produces a wrong invoice, so it lives only in `lib/money.typ`:
 convert once on input, sum as integers, and round in exactly one place —
 `calc.round(cents * rate / 100)`. No `calc` on money anywhere else.

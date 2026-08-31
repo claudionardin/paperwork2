@@ -1,9 +1,10 @@
 #!/bin/sh
-# Render a document to out/. macOS, Linux, and Git Bash / WSL on Windows.
+# Render a document. The PDF is written next to its source.
+# macOS, Linux, and Git Bash / WSL on Windows.
 #
-#   ./render.sh 260819offPRL002a                          compile once
-#   ./render.sh --watch 260819offPRL002a                  live preview
-#   ./render.sh documents/2026/260819offPRL002a.typ       an explicit path also works
+#   ./render.sh 260819offPRL002a                            compile once
+#   ./render.sh --watch 260819offPRL002a                    live preview
+#   ./render.sh documents/2608_prl/260819offPRL002a.typ     an explicit path also works
 #
 # The Windows equivalent is render.ps1. Keep the two in step.
 
@@ -39,19 +40,34 @@ if [ -z "$document" ]; then
   exit 1
 fi
 
-# A bare document number resolves to documents/<year>/<number>.typ; the year is its first
-# two digits, as defined in NUMBERING.md.
+# A bare document number is searched for under documents/, at any depth: project folders
+# organise the tree and the number says nothing about where its file sits. The number is
+# unique across the repository, so exactly one file may match.
 case "$document" in
-  */*) source=$document ;;
-  *)   source="documents/20$(printf '%s' "$document" | cut -c1-2)/$document.typ" ;;
+  */*)
+    source=$document
+    if [ ! -f "$source" ]; then
+      echo "no such document: $source" >&2
+      exit 1
+    fi
+    ;;
+  *)
+    matched=$(find documents -type f -name "$document.typ")
+    count=$(printf '%s' "$matched" | grep -c '^' || true)
+    if [ "$count" -eq 0 ]; then
+      echo "no such document under documents/: $document" >&2
+      exit 1
+    fi
+    if [ "$count" -gt 1 ]; then
+      echo "document number $document is not unique, $count files carry it:" >&2
+      echo "$matched" >&2
+      exit 1
+    fi
+    source=$matched
+    ;;
 esac
 
-if [ ! -f "$source" ]; then
-  echo "no such document: $source" >&2
-  exit 1
-fi
-
 name=$(basename "$source" .typ)
-mkdir -p out
+target="$(dirname "$source")/$name.pdf"
 
-exec typst "$command" --font-path assets/fonts --root . --input "document=$name" "$source" "out/$name.pdf"
+exec typst "$command" --font-path assets/fonts --root . --input "document=$name" "$source" "$target"

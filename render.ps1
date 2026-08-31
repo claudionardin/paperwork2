@@ -1,8 +1,8 @@
-# Render a document to out/. Windows PowerShell.
+# Render a document. The PDF is written next to its source. Windows PowerShell.
 #
-#   .\render.ps1 260819offPRL002a                          compile once
-#   .\render.ps1 -Watch 260819offPRL002a                   live preview
-#   .\render.ps1 documents\2026\260819offPRL002a.typ        an explicit path also works
+#   .\render.ps1 260819offPRL002a                                 compile once
+#   .\render.ps1 -Watch 260819offPRL002a                          live preview
+#   .\render.ps1 documents\2608_prl\260819offPRL002a.typ          an explicit path also works
 #
 # The POSIX equivalent is render.sh. Keep the two in step.
 
@@ -33,22 +33,34 @@ if ($version -lt $MinVersion) {
   exit 1
 }
 
-# A bare document number resolves to documents\<year>\<number>.typ; the year is its first
-# two digits, as defined in NUMBERING.md.
-$source = if ($Document -match '[\\/]') {
-  $Document
+# A bare document number is searched for under documents/, at any depth: project folders
+# organise the tree and the number says nothing about where its file sits. The number is
+# unique across the repository, so exactly one file may match.
+if ($Document -match '[\\/]') {
+  $source = $Document
+  if (-not (Test-Path $source)) {
+    Write-Error "no such document: $source"
+    exit 1
+  }
 } else {
-  Join-Path "documents" (Join-Path "20$($Document.Substring(0, 2))" "$Document.typ")
-}
-
-if (-not (Test-Path $source)) {
-  Write-Error "no such document: $source"
-  exit 1
+  $matched = @(Get-ChildItem -Path "documents" -Recurse -File -Filter "$Document.typ")
+  if ($matched.Count -eq 0) {
+    Write-Error "no such document under documents/: $Document"
+    exit 1
+  }
+  if ($matched.Count -gt 1) {
+    Write-Error @"
+document number $Document is not unique, $($matched.Count) files carry it:
+$($matched.FullName -join "`n")
+"@
+    exit 1
+  }
+  $source = $matched[0].FullName
 }
 
 $name = [System.IO.Path]::GetFileNameWithoutExtension($source)
-if (-not (Test-Path "out")) { New-Item -ItemType Directory "out" | Out-Null }
+$target = Join-Path (Split-Path -Parent (Resolve-Path $source)) "$name.pdf"
 
 $command = if ($Watch) { 'watch' } else { 'compile' }
-& typst $command --font-path assets/fonts --root . --input "document=$name" $source "out/$name.pdf"
+& typst $command --font-path assets/fonts --root . --input "document=$name" $source $target
 exit $LASTEXITCODE

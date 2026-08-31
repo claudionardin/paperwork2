@@ -57,7 +57,7 @@ contacts:
 footer:
   registry:
     - label: share_capital
-      value: 7.500,00 EUR
+      value: 7.500,00 €
     - value: Okrožno sodišče v Kopru
     - value: SRG 2022/68810
     - label: entered_on
@@ -73,7 +73,7 @@ bank_accounts:
     default: true
 
 defaults:
-  currency: EUR
+  currency: "€"
   language: en
   pay_within: 10                    # days; a document may override it, 0 means already paid
   deliver_within: 10                # days; used when a document carries goods, 0 means delivered

@@ -9,8 +9,13 @@
 #   - party names, VAT numbers and addresses replaced by {{...}} placeholders (clause 1),
 #     "Slovenian" replaced by {{supplier.governing_law}} (clause 22);
 #   - the sentence "This Document has 7 pages." dropped from clause 23: it was a hand-typed
-#     count that nothing on a generated document can keep true.
-# The defined terms are "Provider" and "Client", as in the original. The section names quoted
+#     count that nothing on a generated document can keep true;
+#   - the defined term for the issuing party renamed from "Provider" to "Supplier" throughout,
+#     so that one word names that party everywhere on the sheet — the clauses, the party
+#     heading and the signature block. The term is defined in clause 1 and used nowhere else
+#     undefined, so the agreement stays internally coherent; it is the one deviation from the
+#     original wording, and it is deliberate.
+# The defined terms are "Supplier" and "Client". The section names quoted
 # inside the clauses ("delivery and deliverables", "exclusions", "offer", "attachments") must
 # match the headings actually used in the English offer body.
 #
@@ -42,56 +47,56 @@ clauses:
     weight: 10
     title: Agreement
     body: |
-      This agreement, when duly signed by both parties, becomes a legally binding Sales Agreement and is entered into on the last date of signature (the "Effective Date"). This agreement, by and between {{supplier.legal_name}} {{supplier.identification}} (the "Provider") and {{client.legal_name}} {{client.identification}} (the "Client"), also individually referred to as "Party", and collectively "Parties".
+      This agreement, when duly signed by both parties, becomes a legally binding Sales Agreement and is entered into on the last date of signature (the "Effective Date"). This agreement, by and between {{supplier.legal_name}} {{supplier.identification}} (the "Supplier") and {{client.legal_name}} {{client.identification}} (the "Client"), also individually referred to as "Party", and collectively "Parties".
 
   - id: subject
     section: contract
     weight: 20
     title: Scope
     body: |
-      This Agreement governs the sale of a service by the Provider to the Client. The outcome of this performance will be what listed "delivery and deliverables" that will be duly delivered by the Provider to the Client in the form and within the terms described within the same section, and better described in other sections of this document. Any other activity is excluded with particular attention to what is listed in the "exclusions" section.
+      This Agreement governs the sale of a service by the Supplier to the Client. The outcome of this performance will be what listed "delivery and deliverables" that will be duly delivered by the Supplier to the Client in the form and within the terms described within the same section, and better described in other sections of this document. Any other activity is excluded with particular attention to what is listed in the "exclusions" section.
 
   - id: collaboration
     section: collaboration
     weight: 30
     title: Collaboration
     body: |
-      Both parties agree that given the nature of the service the Provider service strongly relies on Client collaboration, who should promptly reply to any Provider inquiry and offer any reasonable support needed to use and understand the current state-of-the-art.
+      Both parties agree that given the nature of the service the Supplier service strongly relies on Client collaboration, who should promptly reply to any Supplier inquiry and offer any reasonable support needed to use and understand the current state-of-the-art.
 
   - id: systems
     section: collaboration
     weight: 40
     title: Systems
     body: |
-      The client should grant the Provider any required access to technologies and architectures (Systems) owned or controlled by the Client and/or any third party on its behalf. Such a System shall remain in function and accessible to the Provider for the entire duration of the performance.
+      The client should grant the Supplier any required access to technologies and architectures (Systems) owned or controlled by the Client and/or any third party on its behalf. Such a System shall remain in function and accessible to the Supplier for the entire duration of the performance.
 
   - id: state_of_the_art_access
     section: collaboration
     weight: 50
     title: Access to state-of-the-art
     body: |
-      When existing, the Client should grant Provider access to any asset and knowledge related to the current state-of-the-art (including but not limited to code, documentation, or design) and should provide any additional information or infrastructure necessary to use, understand, or test the current state-of-the-art. This includes direct contact with anyone who has been involved with the conceptualization, design, or realisation of the state-of-the-art.
+      When existing, the Client should grant Supplier access to any asset and knowledge related to the current state-of-the-art (including but not limited to code, documentation, or design) and should provide any additional information or infrastructure necessary to use, understand, or test the current state-of-the-art. This includes direct contact with anyone who has been involved with the conceptualization, design, or realisation of the state-of-the-art.
 
   - id: third_party_systems
     section: collaboration
     weight: 60
     title: Third-party systems
     body: |
-      Any third-party system required for the performance of the service should be obtained by the Client and made accessible to the Provider for the entire duration of the performance, free of charge. The Provider will not pay for, nor subscribe-on-behalf-of, for any such system. Any such system that may be required has been mentioned in this document (unless otherwise explicitly stated) and the Client herein declares to have evaluated and be aware of such expenses.
+      Any third-party system required for the performance of the service should be obtained by the Client and made accessible to the Supplier for the entire duration of the performance, free of charge. The Supplier will not pay for, nor subscribe-on-behalf-of, for any such system. Any such system that may be required has been mentioned in this document (unless otherwise explicitly stated) and the Client herein declares to have evaluated and be aware of such expenses.
 
   - id: intellectual_property
     section: ip
     weight: 70
     title: Intellectual Property
     body: |
-      The result of the performed service will remain the Provider's intellectual property until the client performs the due payment in full. Both parties agree that after such an event the Provider will release the intellectual property to the Client who will become the sole owner.
+      The result of the performed service will remain the Supplier's intellectual property until the client performs the due payment in full. Both parties agree that after such an event the Supplier will release the intellectual property to the Client who will become the sole owner.
 
   - id: third_party_ip
     section: ip
     weight: 80
     title: Third-Party Intellectual Property
     body: |
-      If the Provider uses or licences intellectual property owned by third parties in the performance of the service, it is the Provider's responsibility to inform the Client who shall verify the licence terms and obtain and maintain any such licences and authorizations as necessary. This condition also applies to open-source intellectual property licensed under any licence.
+      If the Supplier uses or licences intellectual property owned by third parties in the performance of the service, it is the Supplier's responsibility to inform the Client who shall verify the licence terms and obtain and maintain any such licences and authorizations as necessary. This condition also applies to open-source intellectual property licensed under any licence.
 
   - id: confidentiality
     section: ip
@@ -105,14 +110,14 @@ clauses:
     weight: 100
     title: Fixed Price
     body: |
-      When applicable, The Fixed Price quote implies that no additional cost beyond the quote can be charged by the Provider in case the quoted price for the Service does not reflect the actual costs faced during the performance of the Service. In the event of any Modification to this agreement or any of the requirements mentioned herein, the Fixed Price shall be waived or renegotiated. For the Price estimate, the Provider has relied on information provided by the Client (or other authorised personnel on its behalf); in case any such information is not accurate or not true any Provider obligations regarding the Fixed Price shall be deemed inapplicable and the Provider may charge the Client with any additional cost faced during the performance of the service.
+      When applicable, The Fixed Price quote implies that no additional cost beyond the quote can be charged by the Supplier in case the quoted price for the Service does not reflect the actual costs faced during the performance of the Service. In the event of any Modification to this agreement or any of the requirements mentioned herein, the Fixed Price shall be waived or renegotiated. For the Price estimate, the Supplier has relied on information provided by the Client (or other authorised personnel on its behalf); in case any such information is not accurate or not true any Supplier obligations regarding the Fixed Price shall be deemed inapplicable and the Supplier may charge the Client with any additional cost faced during the performance of the service.
 
   - id: price
     section: payment
     weight: 110
     title: Price
     body: |
-      The Provider agrees to sell to the Client the service for the price listed in the "offer" section. The Client accepts the sale and understands that due to its nature, the performance of the service is not refundable and in any case shall be paid.
+      The Supplier agrees to sell to the Client the service for the price listed in the "offer" section. The Client accepts the sale and understands that due to its nature, the performance of the service is not refundable and in any case shall be paid.
 
   - id: amendments
     section: changes
@@ -126,28 +131,28 @@ clauses:
     weight: 130
     title: Termination
     body: |
-      This Agreement may be terminated at any time by either Party upon written notice to the other Party. The Client will be responsible for the payment of the service that has already been performed by the Provider. In case of termination, the due amount will be the full price of any completed deliverable and will be computed "pro rata temporis" for any uncompleted deliverable. This also applies when the outcome of the service is partial, rendered unusable, or lacks the properties described in "delivery and deliverables" due to termination.
+      This Agreement may be terminated at any time by either Party upon written notice to the other Party. The Client will be responsible for the payment of the service that has already been performed by the Supplier. In case of termination, the due amount will be the full price of any completed deliverable and will be computed "pro rata temporis" for any uncompleted deliverable. This also applies when the outcome of the service is partial, rendered unusable, or lacks the properties described in "delivery and deliverables" due to termination.
 
   - id: service_start
     section: other
     weight: 140
     title: Service start
     body: |
-      The service will start on the latter of this contract being duly signed by both Parties, all advanced payment being received by the Provider, and both Parties have agreed to start the Service and fully commit to ensuring its successful delivery.
+      The service will start on the latter of this contract being duly signed by both Parties, all advanced payment being received by the Supplier, and both Parties have agreed to start the Service and fully commit to ensuring its successful delivery.
 
   - id: delivery_terms
     section: other
     weight: 150
     title: Delivery terms
     body: |
-      The Provider will deliver the deliverables within the terms as described in the section "delivery and deliverables". Different deliverables or alterations of the same (such as, but not limited to, lexical translations, change of programming language or optimizations) are not due unless explicitly agreed hereunder. Unless differently specified all the delivery terms are expressed in weeks counting since the Service start date.
+      The Supplier will deliver the deliverables within the terms as described in the section "delivery and deliverables". Different deliverables or alterations of the same (such as, but not limited to, lexical translations, change of programming language or optimizations) are not due unless explicitly agreed hereunder. Unless differently specified all the delivery terms are expressed in weeks counting since the Service start date.
 
   - id: delay_disclaimer
     section: other
     weight: 160
     title: Excuse for Delay or Failure to Perform
     body: |
-      The Provider will not be liable to the Client for any delay, non-delivery, or default of this agreement due to labour disputes, delay, shortage of systems/services/goods required to perform the Service, malfunctions, fires, accidents, Acts of God, or any other causes outside of the Provider's control. The Provider shall notify the Client immediately upon realization that it will not be able to perform the Service or deliver the deliverables, as promised. Either Party may terminate this Agreement upon such notice.
+      The Supplier will not be liable to the Client for any delay, non-delivery, or default of this agreement due to labour disputes, delay, shortage of systems/services/goods required to perform the Service, malfunctions, fires, accidents, Acts of God, or any other causes outside of the Supplier's control. The Supplier shall notify the Client immediately upon realization that it will not be able to perform the Service or deliver the deliverables, as promised. Either Party may terminate this Agreement upon such notice.
 
   - id: no_warranty
     section: other

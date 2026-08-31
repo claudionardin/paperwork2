@@ -37,8 +37,9 @@
     rows.push(label-cell(g.subtotal_label))
     rows.push(value-cell(money(data, g.subtotal)))
     rows.push(label-cell(g.vat_label))
-    // A group that is not taxable has no figure: it names its treatment and shows a dash.
-    rows.push(value-cell(if g.vat_amount == none { [—] } else { money(data, g.vat_amount) }))
+    // Always a figure, zero included: a group that is not taxable charged nothing, and the
+    // clause underneath says why.
+    rows.push(value-cell(money(data, g.vat_amount)))
     if g.note != none { rows.push(note-cell(g.note)) }
   }
   rows.push(table.hline(stroke: 0.7pt + navy))

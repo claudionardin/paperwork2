@@ -41,7 +41,7 @@
     columns: (1fr, 1fr),
     column-gutter: 8mm,
     party-block(data.strings.supplier, data.issuer),
-    party-block(data.strings.customer, data.client),
+    party-block(data.strings.client, data.client),
   )
   v(6mm)
 }

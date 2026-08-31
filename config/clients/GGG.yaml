@@ -1,0 +1,19 @@
+# FIXTURE — invented client, never invoice it. See FIXTURES.md.
+#
+# The unanswered question. `is_business` is absent on purpose, and outside the Union that field
+# is the only thing separating a service that is outside Slovenian VAT from one that is not.
+# Goods still resolve — ZDDV-1 52(1)(a) returns before the field is ever read, so an export
+# compiles — and a service line makes the engine name this file and refuse. lib/vat.typ, the
+# branch above case 3.
+legal_name: Gama Logistika d.o.o.
+short_name: Gama
+address:
+  street: Bulevar Mihajla Pupina 10
+  postal_code: "11070"
+  city: Beograd
+  country: RS
+vat_number:
+tax_code:
+reg_number: "11111111"
+contact_person:
+email:

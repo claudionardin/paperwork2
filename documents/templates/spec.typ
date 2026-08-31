@@ -1,5 +1,5 @@
-// STARTER — technical specification. Copy to documents/<year>/<number>.typ and rename to the
-// number you chose. Tag "spc". No prices, no VAT, no payment: prose only.
+// STARTER — technical specification. Copy to documents/<YYMM_project>/<number>.typ and rename
+// to the number you chose. Tag "spc". No prices, no VAT, no payment: prose only.
 #import "/doctypes/spec.typ": spec
 
 #show: spec.with(

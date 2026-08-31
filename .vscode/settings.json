@@ -4,8 +4,14 @@
   "tinymist.fontPaths": ["${workspaceFolder}/assets/fonts"],
   "tinymist.systemFonts": false,
   "tinymist.formatterMode": "typstyle",
-  // PDFs are produced by render.ps1 into out/, never by the editor.
+  // PDFs are produced by render.ps1, next to the source, never by the editor.
   "tinymist.exportPdf": "never",
+
+  // Same fonts in the browsing preview (it has its own font settings).
+  "tinymist.preview.fontPaths": ["${workspaceFolder}/assets/fonts"],
+  "tinymist.preview.systemFonts": false,
+  "tinymist.preview.refresh": "onType",
+  "tinymist.preview.scrollSync": "onSelectionChangeByMouse",
 
   "[typst]": {
     "editor.defaultFormatter": "myriad-dreamin.tinymist",

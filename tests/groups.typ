@@ -61,12 +61,13 @@
 #assert.eq(two.groups.at(0).subtotal_label, "Subtotal (1/2)")
 #assert.eq(two.groups.at(1).subtotal_label, "Subtotal (2/2)")
 
-// A group that is not taxable names its treatment and carries NO figure. Never "VAT 0%":
-// an intra-Community supply is not zero-rated and the reader must not be able to read it so.
-#assert.eq(two.groups.at(0).vat_label, "Reverse charge")
-#assert.eq(two.groups.at(1).vat_label, "Exempt, intra-Community supply")
-#assert.eq(two.groups.at(0).vat_amount, none)
-#assert.eq(two.groups.at(1).vat_amount, none)
+// Every group prints the same line: the word VAT and the figure charged. A group that is not
+// taxable charged nothing, so the figure is zero and the rate is not named — what the
+// treatment is stays in the clause underneath.
+#assert.eq(two.groups.at(0).vat_label, "VAT")
+#assert.eq(two.groups.at(1).vat_label, "VAT")
+#assert.eq(two.groups.at(0).vat_amount, "0.00")
+#assert.eq(two.groups.at(1).vat_amount, "0.00")
 #assert.eq(two.total, 0)
 
 // The clause is the one of that case, in the document language. Compared against the config
@@ -75,10 +76,10 @@
 #assert.eq(two.groups.at(0).note, tax.cases.b2b_eu_service.clause.en)
 #assert.eq(two.groups.at(1).note, tax.cases.b2b_eu_goods.clause.en)
 
-// --- the language decides both pieces of wording ------------------------------------------
+// --- the language decides the clause -------------------------------------------------------
+// The label is the same word on every group now, and it comes from config/strings/; the clause
+// is the only piece of wording config/tax/ still prints, and it follows the document language.
 #let it = run((line("b2b_eu_service", 300000), line("b2b_eu_goods", 480000)), lang: "it")
-#assert.eq(it.groups.at(0).vat_label, "Inversione contabile")
-#assert.eq(it.groups.at(1).vat_label, "Non imponibile, cessione intracomunitaria")
 #assert.eq(it.groups.at(0).note, tax.cases.b2b_eu_service.clause.it)
 #assert.eq(it.groups.at(1).note, tax.cases.b2b_eu_goods.clause.it)
 
@@ -113,8 +114,8 @@
 // and the total must count only what was actually charged.
 #let mixed = run((line("b2c", 100000), line("export_goods", 50000)))
 #assert.eq(mixed.groups.at(0).vat_amount, "220.00")
-#assert.eq(mixed.groups.at(1).vat_amount, none)
-#assert.eq(mixed.groups.at(1).vat_label, "Exempt, export")
+#assert.eq(mixed.groups.at(1).vat_amount, "0.00")
+#assert.eq(mixed.groups.at(1).vat_label, "VAT")
 #assert.eq(mixed.total, 22000)
 
 // --- nothing to price ----------------------------------------------------------------------
@@ -125,6 +126,6 @@
 // One refusal that cannot be asserted here, because panic() aborts compilation and is not
 // catchable. Verified by hand once, then written down:
 //
-//   a non-taxable case whose label or clause is empty for the document language
-//     ⇒ must panic, not print a blank cell. Only --input draft=true renders it, and then it
-//       prints a visible [MISSING VAT LABEL …] / [MISSING VAT CLAUSE …] marker.
+//   a non-taxable case whose clause is empty for the document language
+//     ⇒ must panic, not print a blank line. Only --input draft=true renders it, and then it
+//       prints a visible [MISSING VAT CLAUSE …] marker.
