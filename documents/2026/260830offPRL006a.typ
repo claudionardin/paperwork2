@@ -2,15 +2,14 @@
 #import "/doctypes/offer.typ": offer
 
 #show: offer.with(
-  issuer: "axelered_si", // a file name in config/issuers/, without .yaml
-  client: "PRL", // a file name in config/clients/, without .yaml
-  seq: 6, // progressive per (year, client), typed by hand
-  revision: "a", // "a" on the first version sent, then "b", "c"…
-  vies-checked: "2026-08-30", // ISO date of the VIES check. It must equal `date` below.
-  // TODO query IT01313650325 in VIES on the day this goes out
-  // and confirm this date, or the exemption is unevidenced
-  language: "en", // "it" or "en"
-  date: "2026-08-30", // issue date, ISO. Must match the YYMMDD of the file name
+  issuer: "axelered_si",     // config/issuers/<id>.yaml
+  client: "PRL",             // config/clients/<id>.yaml
+  seq: 6,                    // progressive per (year, client), typed by hand
+  revision: "a",             // then "b", "c"…
+  vies: "no",                // "no" → 22%. TODO query IT01313650325 on the day this goes out;
+                             // if VIES validates it, write "2026-08-30" here instead
+  language: "en",            // "it" | "en"
+  date: "2026-08-30",        // ISO, == the YYMMDD of the file name
   valid-until: "2026-09-30",
   items: (
     // kind is mandatory: "service" or "goods". It decides the VAT treatment.

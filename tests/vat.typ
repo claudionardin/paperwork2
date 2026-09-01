@@ -5,11 +5,15 @@
 
 // `code` is not a field of a client file: it is the file name, and lib/model.typ adds it to the
 // record before calling in, so a refusal can name the file to fix. The fixture mirrors that.
-#let cli(country, vat: none, business: true) = (
+//
+// `vies` mirrors the same thing for the VIES answer: lib/model.typ sets it false when the
+// author wrote `vies: "no"`, and leaves it out entirely everywhere else.
+#let cli(country, vat: none, business: true, vies-ok: true) = (
   code: "XXX",
   country: country,
   vat_number: vat,
   is_business: business,
+  vies_ok: vies-ok,
 )
 
 // 1. Slovenia. Both outcomes are 22% with no clause; the id is what tells them apart.
@@ -38,6 +42,24 @@
 //    is nothing to reverse the charge to.
 #assert.eq(resolve("SI", cli("IT", business: false), "service"), "b2c")
 #assert.eq(resolve("SI", cli("DE"), "goods"), "b2c")
+
+// An id VIES rejects is no id at all. Both intra-Community cases rest on the counterparty
+// being identified in another member state, so a rejected id falls through to case 7 and the
+// supply is taxed at 22% — the whole point of writing `vies: "no"` instead of
+// deleting the client's VAT number, which would lose the fact that it has one.
+#assert.eq(resolve("SI", cli("IT", vat: "IT01313650325", vies-ok: false), "goods"), "b2c")
+#assert.eq(resolve("SI", cli("IT", vat: "IT01313650325", vies-ok: false), "service"), "b2c")
+
+// Outside the EU there is no VIES, so the flag decides nothing there and nothing changes.
+#assert.eq(resolve("SI", cli("RS", vat: "RS100000000", vies-ok: false), "goods"), "export_goods")
+#assert.eq(resolve("SI", cli("AE", vies-ok: false), "service"), "noneu_service")
+
+// Absent, it defaults to true: a client record built before the field existed still resolves
+// on the id alone.
+#assert.eq(
+  resolve("SI", (code: "XXX", country: "IT", vat_number: "IT01313650325"), "service"),
+  "b2b_eu_service",
+)
 
 // Two more refusals that cannot be asserted here, for the same reason. Verified by hand once,
 // then written down:

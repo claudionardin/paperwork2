@@ -3,7 +3,6 @@
 #
 # Case 1: SI + VAT id ⇒ b2b_si. Goods and services alike, Slovenian VAT 22%.
 legal_name: Alfa Test d.o.o.
-short_name: Alfa
 address:
   street: Partizanska cesta 1
   postal_code: "6210"
@@ -13,5 +12,3 @@ vat_number: SI11111111
 tax_code:
 reg_number:
 is_business: true
-contact_person:
-email:

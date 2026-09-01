@@ -1,6 +1,5 @@
 # Extracted from existing proforma documents. TODO verify.
 legal_name: Stefano Perion
-short_name:
 address:
   street: Via dei Mirissa 11/8
   postal_code: "34149"
@@ -9,5 +8,3 @@ address:
 vat_number:
 tax_code: PRNSFN93B01L424J
 is_business: false
-contact_person:
-email:

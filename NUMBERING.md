@@ -8,7 +8,7 @@ Document number and file name are the same string.
 |---|---|---|
 | `YYMMDD` | 6 | issue date |
 | `tag` | 3 | document type |
-| `CCC` | 3 | client code, `config/clients/<CCC>.yaml` |
+| `CCC` | 3 | client code, `config/clients/<id>.yaml` |
 | `NNN` | 3 | progressive, typed by hand |
 | `r` | 0–1 | revision, lowercase letter `a`, `b`, `c`… — offer / spec / proforma only |
 

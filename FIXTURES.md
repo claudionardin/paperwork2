@@ -15,7 +15,7 @@ is never copied into a project folder — copy a starter from `documents/templat
 | `BBB` | SI | consumer | 7 `b2c` — 22%, the floor of the cascade at home |
 | `CCC` | CH | business | 2 `export_goods` + 3 `noneu_service` — two exempt groups on one sheet |
 | `DDD` | US | consumer | 2 `export_goods` — and 4, the refusal, if a service line is added |
-| `EEE` | DE | VAT id | 5 `b2b_eu_goods` + 6 `b2b_eu_service` — needs `vies-checked` |
+| `EEE` | DE | VAT id | 5 `b2b_eu_goods` + 6 `b2b_eu_service` — needs `vies` |
 | `FFF` | IT | no VAT id | 7 `b2c` — 22% abroad, the sheet in Italian, the only tax code |
 | `GGG` | RS | `is_business` absent | 2 `export_goods` — and the refusal on a service line |
 
@@ -43,7 +43,9 @@ because a document that refuses to compile cannot live in the repository:
 |---|---|
 | `DDD`, change the line to `kind: "service"` | panic — ZDDV-1 30.d against 25(2), no single treatment |
 | `GGG`, add a `kind: "service"` line | panic naming `config/clients/GGG.yaml` — no `is_business` |
-| `EEE`, set `vies-checked: none`, or any date other than `date:` | panic — the exemption needs a check made on the day of issue |
+| `EEE`, set `vies: none` | panic — the exemption needs a check, and it has to be made on the day of issue |
+| `EEE`, set `vies:` to any date other than `date:` | renders, with `ERROR` in place of the VAT figure and of the grand total |
+| `EEE`, set `vies: "no"` | renders as a plain domestic sale: the exemption is dropped and the whole sheet is taxed at 22% |
 
 ## Not covered
 

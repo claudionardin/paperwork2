@@ -6,7 +6,6 @@
 # compiles — and a service line makes the engine name this file and refuse. lib/vat.typ, the
 # branch above case 3.
 legal_name: Gama Logistika d.o.o.
-short_name: Gama
 address:
   street: Bulevar Mihajla Pupina 10
   postal_code: "11070"
@@ -15,5 +14,3 @@ address:
 vat_number:
 tax_code:
 reg_number: "11111111"
-contact_person:
-email:

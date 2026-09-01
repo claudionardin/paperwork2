@@ -27,6 +27,10 @@
 )
 
 #let run(items, lang: "en") = vat-groups(items, tax, labels, lang, money)
+#let run-err(items, lang: "en") = vat-groups(
+  items, tax, labels, lang, money,
+  errors: ("b2b_eu_goods", "b2b_eu_service"),
+)
 
 // --- one taxable treatment -------------------------------------------------------------
 // 1000.00 + 500.00 at 22% = 330.00. A single group is not numbered.
@@ -129,3 +133,23 @@
 //   a non-taxable case whose clause is empty for the document language
 //     ⇒ must panic, not print a blank line. Only --input draft=true renders it, and then it
 //       prints a visible [MISSING VAT CLAUSE …] marker.
+
+// --- a treatment whose figures cannot be trusted ----------------------------------------
+// `errors` names the cases whose exemption rests on a stale VIES check. The group is still
+// computed and still carries its lines and its base — the sheet has to stay readable — but it
+// is flagged, its clause is replaced by the reason, and the flag reaches the totals so the
+// layout can print ERROR where both figures would be.
+#let bad = run-err((line("b2b_eu_service", 100000), line("b2c", 50000)))
+#assert.eq(bad.error, true)
+#assert.eq(bad.groups.first().error, true)
+#assert.eq(bad.groups.first().subtotal, "1000.00")
+#assert(bad.groups.first().note.starts-with("[VIES ERROR]"))
+// The other treatment on the same sheet is untouched: only the claim that rests on the check
+// is in doubt, and 500.00 at 22% is still 110.00.
+#assert.eq(bad.groups.last().error, false)
+#assert.eq(bad.groups.last().vat_amount, "110.00")
+#assert.eq(bad.total, 11000)
+
+// No errors named, nothing flagged.
+#assert.eq(run((line("b2b_eu_service", 100000),)).error, false)
+#assert.eq(run((line("b2b_eu_service", 100000),)).groups.first().error, false)

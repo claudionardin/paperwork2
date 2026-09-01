@@ -14,23 +14,27 @@ identification:
 
 # Dual signature block appended to an offer when the frontmatter has `signature: true`.
 # The defined terms are "Supplier" and "Client", as in the English clauses.
+# The two columns carry the same three fields in the same order — who signs, in what capacity,
+# where and when — so each party states the same things. The supplier's are printed, the
+# client's are left blank for a hand to complete.
 signature:
   intro: >-
     The Parties agree to the terms and conditions set forth above as demonstrated by their
     signatures as follows:
   supplier_party: (Supplier)
   client_party: (Client)
-  representative_of: "{{role}} at {{party}}"   # e.g. "CEO at Axelered d.o.o.", as in the original
-  signed_on: "Signed on:"
-  empty_date: __ / __ / ____
+  label_name: "Full name:"
+  label_title: "Title:"
+  label_place_date: "Place and date:"
 
-# Payment and delivery boilerplate. The sentences are the same for any issuer; only the number
-# of days is an issuer fact, and it lives in config/issuers/<id>.yaml under `defaults`.
-# `within` receives {{days}}.
+# Payment and delivery boilerplate. The same for any issuer; only the number of days is an
+# issuer fact, and it lives in config/issuers/<id>.yaml under `defaults`. `within` receives
+# {{days}}. Both are terms, not sentences: they are printed as the value of a `Terms` label,
+# beside each other, so the two read the same way.
 terms:
   payment:
-    within: Please pay within {{days}} days of the issue date by bank transfer to
-    already_paid: This document is already paid in full. No payment is due.
+    within: Within {{days}} days of the issue date, by bank transfer
+    already_paid: Paid in full, nothing due
   delivery:
     within: Within {{days}} days of the issue date
     already_delivered: Already delivered
@@ -68,11 +72,13 @@ labels:
   subtotal: Subtotal
   vat: VAT
   total: Total Price
+  payment: Payment
+  delivery: Delivery
+  terms: Terms
   headed_to: Headed to
   iban: IBAN
   swift: SWIFT/BIC
-  delivery_destination: Destination
-  delivery_terms: Delivery terms
+  destination: Destination
   page: Page
   vat_number: "VAT no."
   tax_code: "Tax code"

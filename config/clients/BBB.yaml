@@ -3,7 +3,6 @@
 # Case 7 at home: SI, no VAT id ⇒ b2c. Slovenian VAT 22%, and no clause, exactly like AAA —
 # the pair exists because the two are different documents to an accountant, not different tax.
 legal_name: Bojan Bregar
-short_name:
 address:
   street: Ljubljanska cesta 22
   postal_code: "1000"
@@ -13,5 +12,3 @@ vat_number:
 tax_code:
 reg_number:
 is_business: false
-contact_person:
-email:

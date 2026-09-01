@@ -29,7 +29,7 @@ The whole application is four things:
 
 1. **Layout** — Typst modules in `lib/`. The house style is written and working.
 2. **VAT** — `lib/vat.typ` decides which case applies, `config/tax/<regime>.yaml` holds the wording.
-3. **Data** — issuers in `config/issuers/<id>.yaml`, clients in `config/clients/<CCC>.yaml`.
+3. **Data** — issuers in `config/issuers/<id>.yaml`, clients in `config/clients/<id>.yaml`.
 4. **Language** — `en` or `it` per document, strings in `config/strings/<lang>.yaml`.
 
 **The only dependency is the `typst` binary.** No compiler, no package manager, no build step.
@@ -90,6 +90,10 @@ it, so a project folder is the whole project, readable without a typst binary. N
 tree is keyed to the year: `documents/2026/` survives from the previous scheme and is left
 alone, and the renderer finds a document by searching, not by computing a path.
 
+Two page-break rules, in `lib/clauses.typ` and nowhere else: a clause is never split across
+pages, and a section heading never sits at the foot of a page without its first clause. The
+free prose above the clauses has no rules yet — a `TODO.md` entry, deliberately open.
+
 Logic lives in `lib/`, never in `doctypes/`. A doctype is ~20 lines calling functions: it names
 the blocks a document type is made of, in order, and nothing else.
 
@@ -109,7 +113,7 @@ half-translated facts.
 |---|---|---|---|
 | Issuer | `issuer:` on the document | `config/issuers/<id>.yaml` | names, address, tax ids, bank accounts, registry footer, house defaults, `tax_regime` |
 | Language | `language:` on the document | `config/strings/<lang>.yaml` | every fixed sentence and label printed on a sheet |
-| Client | `client:` on the document | `config/clients/<CCC>.yaml` | the buyer, and the facts the VAT rules read |
+| Client | `client:` on the document | `config/clients/<id>.yaml` | the buyer, and the facts the VAT rules read |
 
 An issuer file carries no boilerplate and a strings file carries no facts. A field that varies
 on **both** axes — a fragment of prose naming this issuer — carries a per-language map in the
@@ -175,13 +179,24 @@ falls under the closed list of ZDDV-1 30.d (consultancy, engineering, data proce
 licensing — most of what this company sells) and Slovenian VAT if it does not, and a document
 carries nothing that tells the two apart.
 
-Cases 5 and 6 demand `vies-checked: "YYYY-MM-DD"` on the document and refuse without it. Both
-hold only if the client's VAT id was valid in VIES on the day of supply, and that is a fact of
-the day rather than of the client: a company registered in March can be struck off in September,
-so the date is recorded per document and never in `config/clients/`. It **must equal `date:`**,
-because a check made a week ago proves nothing about today: the field therefore carries no
-information the document does not already have, and that is the whole of it — it cannot be
-filled in without querying VIES and cannot be left to age. Evidence, not wording: never printed.
+Cases 5 and 6 demand `vies:` on the document and refuse without it. Both hold only if the
+client's VAT id was valid in VIES on the day of supply, and that is a fact of the day rather
+than of the client: a company registered in March can be struck off in September, so the answer
+is recorded per document and never in `config/clients/`. Evidence, not wording: never printed.
+The field takes **exactly three values**, and one of them decides the tax:
+
+| `vies:` | Meaning |
+|---|---|
+| `"YYYY-MM-DD"` — the issue date, and only it | VIES was queried today and answered yes. The exemption stands |
+| `"no"` | VIES does not recognise the id. It cannot carry a reverse charge, so `lib/vat.typ` ignores it and the supply falls to `b2c`, 22% |
+| `none` | not asked. Refused, but only if the document actually claims one of the two exemptions |
+
+Anything else — a date that is not the issue date, a typo — is a check that has aged into
+worthlessness. It renders, with `ERROR` in red where the group's VAT figure and the grand total
+would be, and the clause replaced by the reason. Shown rather than refused on purpose: the
+author is looking at the PDF, and `ERROR` on the total says it faster than a compiler message,
+while still making the sheet impossible to send. `"no"` is written instead of deleting the
+client's VAT number, which would lose the fact that it has one.
 
 Public administration is `b2b_si`: e-invoicing through UJP is an obligation of delivery, not a
 VAT treatment, and changes nothing printed on the sheet.
@@ -285,7 +300,7 @@ Renders, but nobody has checked it. Before anything goes to a client:
 | `config/tax/si.yaml` — four clauses and four treatment labels | the accountant |
 | `config/clauses/offer.it.yaml` — 23 clauses | holder of the original contract, then a lawyer. The English file is the verified original |
 | `assets/fonts/` — Noto Sans stands in for the brand fonts | — |
-| Brand colours — missing, `lib/tokens.typ` uses greys | — |
+| Brand colours — missing, `lib/tokens.typ` uses a navy and an accent blue as placeholders | — |
 
 Open: per-client numbering vs Art. 82 ZDDV-1 · `Sezana` or `Sežana` on documents · thousands
 separator above 999.99 · non-EU consumer VAT case.

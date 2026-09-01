@@ -5,7 +5,6 @@
 # for this client makes the engine panic on purpose (30.d vs 25(2)), so DDD is also the fixture
 # that proves the refusal still fires.
 legal_name: Dana Doyle
-short_name:
 address:
   street: 500 Terry Francois Blvd
   postal_code: "94158"
@@ -15,5 +14,3 @@ vat_number:
 tax_code:
 reg_number:
 is_business: false
-contact_person:
-email:

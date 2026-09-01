@@ -19,11 +19,10 @@
 #   {{supplier.identification}}  computed: "con numero di partita IVA <vat> e sede in <address>"
 #   {{supplier.governing_law}}   "slovena", from the issuer profile, legal.governing_law
 #   {{supplier.forum}}           "Okrožno sodišče v Kopru, Koper, Slovenia", from the issuer profile, legal.forum
-#   {{client.legal_name}}        from config/clients/<CCC>.yaml
+#   {{client.legal_name}}        from config/clients/<id>.yaml
 #   {{client.identification}}    computed, same rule as the supplier, falls back to
 #                                "con codice fiscale <tax_code> e sede in <address>" for an
 #                                Italian consumer, and to "con sede in <address>" when neither exists
-#   {{client.short_name}}        optional defined term, defaults to legal_name
 #
 # The dual signature block is NOT a clause. It is part of the offer template,
 # its labels live in config/strings/it.yaml.

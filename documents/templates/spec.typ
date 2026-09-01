@@ -1,14 +1,14 @@
-// STARTER — technical specification. Copy to documents/<YYMM_project>/<number>.typ and rename
-// to the number you chose. Tag "spc". No prices, no VAT, no payment: prose only.
+// STARTER — technical specification. Copy to documents/<YYMM_project>/<number>.typ, rename to
+// the number. Tag "spc". Prose only: no prices, no VAT, no payment.
 #import "/doctypes/spec.typ": spec
 
 #show: spec.with(
-  issuer: "axelered_si",      // a file name in config/issuers/, without .yaml
-  client: "PRL",              // a file name in config/clients/, without .yaml
-  seq: 1,                     // progressive per (year, client), typed by hand
-  revision: "a",
-  language: "it",             // "it" or "en"
-  date: "2026-08-27",         // issue date, ISO. Must match the YYMMDD of the file name
+  language: "it", // "it" | "en"
+  issuer: "axelered_si", // config/issuers/<id>.yaml
+  client: "PRL", // config/clients/<id>.yaml
+  seq: 0, // progressive per (year, client), typed by hand
+  revision: "a", // "a" on the first version sent, then "b", "c"…
+  date: "2026-08-27", // ISO, == the YYMMDD of the file name
 )
 
 = Architettura

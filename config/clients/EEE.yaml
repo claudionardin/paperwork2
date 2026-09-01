@@ -1,11 +1,10 @@
 # FIXTURE — invented client, never invoice it. See FIXTURES.md.
 #
 # Cases 5 and 6: rest of the Union with a VAT id. Goods ⇒ b2b_eu_goods, services ⇒
-# b2b_eu_service. Both demand `vies-checked:` equal to `date:` on the document — the VAT id
-# below is invented and will never validate in VIES, which is the point: this fixture renders,
-# it does not prove anything.
+# b2b_eu_service. Both demand `vies:` on the document, set to the issue date — the VAT id below
+# is invented and would never validate in VIES, which is the point: this fixture renders, it
+# does not prove anything.
 legal_name: Epsilon Systeme GmbH
-short_name: Epsilon
 address:
   street: Maximilianstrasse 13
   postal_code: "80539"
@@ -15,5 +14,3 @@ vat_number: DE111111111
 tax_code:
 reg_number: HRB 111111
 is_business: true
-contact_person:
-email:

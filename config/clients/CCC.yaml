@@ -3,7 +3,6 @@
 # Cases 2 and 3: outside the Union, business. Goods ⇒ export_goods, services ⇒ noneu_service.
 # The one fixture that prints two exempt groups on a single sheet.
 legal_name: Cassiopeia Trading AG
-short_name: Cassiopeia
 address:
   street: Bahnhofstrasse 9
   postal_code: "8001"
@@ -13,5 +12,3 @@ vat_number:
 tax_code:
 reg_number: CHE-111.111.111
 is_business: true
-contact_person:
-email:

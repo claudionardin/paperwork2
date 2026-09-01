@@ -34,8 +34,9 @@ tax_regime: si
 signatory:
   name: Claudio Nardin
   role:                             # bilingual on purpose: a fact about this person, translated
-    en: Legal representative
-    it: Legale rappresentante
+    en: Director                    # the office as the Slovenian register names it: direktor
+    it: Direttore
+    sl: Direktor                    # the original, kept for the day a Slovenian sheet is issued
 
 # Referenced by the governing_law clause. A second issuer profile overrides these without
 # touching the clause text.

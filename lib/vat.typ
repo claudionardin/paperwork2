@@ -32,6 +32,12 @@
   // Slovenian VAT from one that is not, and there is no register to check it against, so a
   // client file that leaves it out has not answered the question. Read where it is used.
   let is-business = client.at("is_business", default: none)
+  // Whether VIES answered yes on the day of supply. Not a field of a client file: lib/model.typ
+  // resolves the document's `vies:` into this boolean and adds it to the record, false only
+  // when the author wrote `vies: "no"`. Absent means the question was never in play — a client
+  // fixture, or a supply no exemption depends on — so it defaults to true and the branches
+  // below decide on the id alone.
+  let vies-ok = client.at("vies_ok", default: true)
 
   // 1. Slovenia. Both branches are 22% with no clause, and they are kept apart only because
   //    the two are different documents to an accountant. Not covered: the domestic reverse
@@ -77,8 +83,11 @@
   }
 
   // Rest of the Union. A VAT id is what makes it B2B, not the client calling itself a
-  // business: without one there is nothing to reverse the charge to.
-  if has-vat-id {
+  // business: without one there is nothing to reverse the charge to. An id VIES does not
+  // recognise is no id at all — the exemption of 46(1) and the reverse charge of 25(1) both
+  // rest on the counterparty being identified in another member state, so a rejected id falls
+  // through to case 7 and the supply is taxed at the standard rate.
+  if has-vat-id and vies-ok {
     // 5. Goods leaving Slovenia for another member state. Not covered: goods the supplier
     //    installs or assembles at destination, which under ZDDV-1 20(3) are not an
     //    intra-Community supply at all but a supply in the member state of arrival. A
@@ -114,7 +123,7 @@
 // --- dispatch ------------------------------------------------------------------------------
 //
 //   supplier  ISO country of the issuing company, from config/issuers/<id>.yaml
-//   client    the client record, from config/clients/<CCC>.yaml
+//   client    the client record, from config/clients/<id>.yaml
 //   kind      "goods" or "service", mandatory on every item, never inferred
 #let resolve(supplier, client, kind) = {
   if kind not in ("goods", "service") {

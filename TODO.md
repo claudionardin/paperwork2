@@ -7,8 +7,14 @@ Threads deliberately not pulled. Note it here, move on.
 | Item | Note |
 |---|---|
 | **Axelered LLC, Dubai** | The second issuer. The structure is in place and every field is a TODO: `config/issuers/axelered_ae.yaml` needs the trade licence data, the TRN, the bank account and the registry footer entries; `config/tax/ae.yaml` needs the rates, the case keys and the clause wording from a UAE accountant; `lib/vat.typ` needs `resolve-ae`, which panics today. Two knock-on items: money is EUR-only in `lib/money.typ` if the LLC ever bills in AED, and `NUMBERING.md` does not distinguish issuers, so two companies could compute the same number. |
-| **VIES check on `260830invPRL005`** | The only document in `documents/2026/` carries `vies-checked: "2026-08-30"` and nobody has actually queried VIES for `IT01313650325`. The engine demands the field and checks it against the issue date, but it cannot verify the query happened: that part is on the author, for this document and every later one. |
+| **VIES check on `260830invPRL005`** | The only document in `documents/2026/` carries `vies: "2026-08-30"` and nobody has actually queried VIES for `IT01313650325`. The engine demands the field and checks it against the issue date, but it cannot verify the query happened: that part is on the author, for this document and every later one. |
 | **CMR consignment note** | Last document to build, after the other four print real documents. Nothing exists yet: no doctype, and none of the required data exists in `config/` — carrier, vehicle plates, place of loading, place of unloading, number of packages, packaging type, gross weight, volume. Needs a new data block before any layout work starts. Its parties are **not** the two of every other sheet: boxes 1 and 2 of the consignment note are the sender and the consignee, who need not be the supplier and the client. `labels.supplier` / `labels.client` do not apply — the doctype needs its own two keys. |
+
+## Layout
+
+| Item | Note |
+|---|---|
+| **Page breaks in the free prose** | The clause block has rules and they are enforced in `lib/clauses.typ`: a clause never splits across pages, and a section heading never sits at the foot of a page without its first clause. The prose an author writes above the clauses has **no rules at all** — a level 1 heading can end a page, a table can split mid-row, a list can leave one item behind. Nothing has gone wrong yet because the documents are short. Decide before a long spec is written: at minimum an orphan rule on headings (`show heading: it => block(breakable: false, sticky: true, it)`), and probably `breakable: false` on tables and figures. Not done now because the right answer depends on documents nobody has written yet, and a wrong rule that forces page breaks is worse than none. |
 
 ## Tax engine, known limits
 
@@ -50,7 +56,6 @@ sells today; if one becomes real, it needs a field before it needs a rule.
 |---|---|
 | `doctypes/cmr.typ` | Not written. See the CMR entry above. |
 | Country printed inside a clause | `address.country` holds the ISO code, which the VAT cascade needs, so clause 1 prints "6210 Sezana, SI" where the original read "Sezana 6210, Slovenija". A printable country name would be a second field on the address. |
-| `config/issuers/axelered_si.yaml` — `signatory.role` | Reads "Legal representative" / "Legale rappresentante"; the signed offers are signed "CEO at Axelered Doo". Pick one. |
 | `config/strings/<lang>.yaml` — `footer.confidentiality` | The Italian text is a translation of the English one, not an approved wording. Have it confirmed. |
 | Slovenian `config/strings/sl.yaml` | Does not exist. `config/tax/si.yaml` already carries the Slovenian VAT clauses for the day a Slovenian document is issued; the labels and boilerplate would have to follow. |
 
@@ -59,7 +64,7 @@ sells today; if one becomes real, it needs a field before it needs a rule.
 | What | Note |
 |---|---|
 | `assets/fonts/` | Noto Sans stands in for the brand fonts |
-| Brand colours | Not supplied. `lib/tokens.typ` uses a navy (`#0f2a47`) and an accent blue (`#3f7ea6`) for the top band, the title and the table rules. Swap them for the brand values when they exist. |
+| Brand colours | Not supplied. `lib/tokens.typ` holds the whole palette: a navy (`#0f2a47`), an accent blue (`#3f7ea6`), and the two washes derived from them (`zebra`, `panel`). The logo is recoloured to `navy` at render time, so swapping the two blues re-skins every sheet. |
 
 ## Open questions
 

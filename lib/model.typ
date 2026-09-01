@@ -103,7 +103,10 @@
 // in the document language is an error, not a blank line.
 //
 //   typst compile --root . tests/groups.typ
-#let vat-groups(items, tax, labels, language, money) = {
+// `errors` is the list of case keys whose figures cannot be trusted — today only a stale
+// `vies:`. The group is still computed and printed, so the sheet stays readable, but it
+// is flagged and the layout prints ERROR in place of every figure that depends on the claim.
+#let vat-groups(items, tax, labels, language, money, errors: ()) = {
   let cases = ()
   for it in items { if it.case not in cases { cases.push(it.case) } }
 
@@ -144,10 +147,20 @@
       subtotal_label: subtotal-label,
       vat_label: vat-label,
       vat_amount: money(if taxable { amount } else { 0 }),
-      note: if taxable { none } else { wording("clause") },
+      // A flagged group keeps its lines and its base but loses its clause: printing the
+      // article that justifies an exemption the document cannot support would be the one
+      // sentence on the sheet that is actually untrue.
+      note: if case in errors {
+        (
+          "[VIES ERROR] the exemption on this group rests on a VIES check that is not the "
+            + "issue date. Query the client's VAT number again and set vies to the issue "
+            + "date, or to \"no\" if VIES does not recognise the id."
+        )
+      } else if taxable { none } else { wording("clause") },
+      error: case in errors,
     ))
   }
-  (groups: groups, total: total-vat)
+  (groups: groups, total: total-vat, error: groups.any(g => g.error))
 }
 
 // --- clauses -----------------------------------------------------------------------------
@@ -172,10 +185,6 @@
     "supplier.forum": co.legal.forum,
     "client.legal_name": client.legal_name,
     "client.identification": identification(client, strings),
-    "client.short_name": {
-      let short = client.at("short_name", default: none)
-      if short in (none, "") { client.legal_name } else { short }
-    },
   )
 
   let chosen = source.clauses.sorted(key: c => (section-weight.at(c.section), c.weight))
@@ -200,7 +209,7 @@
   date: none,
   valid-until: none,
   items: (),
-  vies-checked: none,
+  vies: none,
   signature: false,
   pay-within: none,
   bank-account: none,
@@ -242,7 +251,38 @@
   // under the address. Flatten here so the rule engine never has to know the file layout. The
   // code comes from the file name, which is the only place it is written: the engine adds it
   // so a refusal can name the file the author has to fix.
-  let subject = client-record + (country: client-record.address.country, code: client)
+  //
+  // `vies:` accepts exactly three things, and they are settled here, before a single line is
+  // priced, because one of them changes the treatment itself. Anything else is the fourth row.
+  //
+  //   "YYYY-MM-DD"   the issue date, and only the issue date: VIES was queried today and
+  //                  answered yes, so the exemption stands
+  //   "no"           VIES answered no. An id another member state does not recognise cannot
+  //                  carry a reverse charge, so lib/vat.typ ignores it and the supply is taxed
+  //                  at the standard rate — the one case where this field decides the tax
+  //                  rather than merely evidencing it
+  //   none           not answered. Refused below, but only if the document actually claims an
+  //                  exemption; on any other document the question never arises
+  //
+  //   anything else  a date that is not the issue date, or a typo, is a check that has aged
+  //                  into worthlessness. Not a refusal: the sheet is rendered so the author
+  //                  can see it, with ERROR where every figure that rests on the stale claim
+  //                  would be
+  let vies-state = if vies in (none, "") {
+    "absent"
+  } else if vies == "no" {
+    "invalid"
+  } else if vies == date {
+    "ok"
+  } else {
+    "stale"
+  }
+
+  let subject = client-record + (
+    country: client-record.address.country,
+    code: client,
+    vies_ok: vies-state != "invalid",
+  )
 
   // Every amount on the page goes through this one closure, so the language decides the
   // separators once and nothing downstream formats money on its own.
@@ -258,29 +298,30 @@
   // recorded per document, and demanded only when a document actually claims one of the two.
   // Nothing is printed: it is evidence for an inspection, not wording on a sheet.
   //
-  // It is written like `date:`, ISO, and it has to BE the issue date: a check made a week ago
-  // proves nothing about today. So the field carries no information the document does not
+  // A date is written like `date:`, ISO, and it has to BE the issue date: a check made a week
+  // ago proves nothing about today. So the field carries no information the document does not
   // already have, and that is the whole of it — it cannot be filled in without querying VIES,
-  // and it cannot be left to age.
-  if priced.any(it => it.case in ("b2b_eu_goods", "b2b_eu_service")) {
-    if vies-checked in (none, "") {
+  // and it cannot be left to age. The three values it accepts are set out where they are read,
+  // above.
+  let exempting = ("b2b_eu_goods", "b2b_eu_service")
+  let vat-errors = ()
+  if priced.any(it => it.case in exempting) {
+    if vies-state == "absent" {
       panic(
         "this document exempts an intra-Community supply, which holds only if "
           + client-record.vat_number + " was valid in VIES on the day of supply. Query it at "
-          + "https://ec.europa.eu/taxation_customs/vies/ then write vies-checked: \""
-          + date + "\"",
+          + "https://ec.europa.eu/taxation_customs/vies/ then write vies: \"" + date
+          + "\" if it answers yes, or vies: \"no\" if it does not recognise the id, which "
+          + "drops the exemption and taxes this document at the standard rate",
       )
     }
-    if vies-checked != date {
-      panic(
-        "vies-checked is " + repr(vies-checked) + " but this document is issued on " + date
-          + ". VIES has to be queried on the day of issue and the date has to say so: query "
-          + client-record.vat_number + " again and write vies-checked: \"" + date + "\"",
-      )
-    }
+    // A date that is not the issue date proves nothing about today, so the exemption on this
+    // sheet is unsupported. It is shown rather than refused: the author is looking at the PDF,
+    // and ERROR where the VAT figure belongs says it faster than a compiler message.
+    if vies-state == "stale" { vat-errors = exempting }
   }
   let subtotal = priced.map(it => it.cents).sum(default: 0)
-  let vat = vat-groups(priced, tax, labels, language, money)
+  let vat = vat-groups(priced, tax, labels, language, money, errors: vat-errors)
 
   let issuer-party = party(co, labels) + (
     website: co.contacts.at("website", default: none),
@@ -331,9 +372,11 @@
     let key = if dispatch == 0 { "already_delivered" } else { "within" }
     let terms = strings.terms.delivery.at(key, default: none)
     (
+      // Lines, not one string: an address is read down a column, and the panel it sits in is
+      // narrow. A `deliver-to` written by hand is one line unless the author wrote more.
       destination: if deliver-to == "" {
-        (client-record.legal_name, ..address-lines(client-record.address)).join(", ")
-      } else { deliver-to },
+        (client-record.legal_name, ..address-lines(client-record.address))
+      } else { (deliver-to,) },
       terms: if terms in (none, "") { missing("delivery terms " + key + "/" + language) } else {
         fill-in(terms, (days: str(dispatch)))
       },
@@ -367,21 +410,37 @@
       subtotal: money(subtotal),
       total: money(subtotal + vat.total),
       total_label: labels.total,
+      // A total built on an unsupported exemption is a wrong number, and a wrong number that
+      // looks right is worse than none: the layout prints ERROR instead.
+      error: vat.error,
     ),
 
     // The contract clauses belong to the offer alone, and it prints all of them.
     clauses: if tag == "off" { build-clauses(language, co, client-record, strings) } else { () },
     payment: payment,
     delivery: delivery,
+    // The two signature columns are built the same way and carry the same fields: the party,
+    // the defined term naming it, then who signs, in what capacity, where and when. The
+    // supplier's are known and printed; the client's are blank rules the counterparty fills in
+    // by hand — the place and the date of their signature are theirs to state, not ours.
     signature: if not signature { none } else {
       strings.signature + (
-        supplier_role: fill-in(
-          strings.signature.representative_of,
-          (role: co.signatory.role.at(language), party: co.legal_name),
+        supplier: (
+          party: co.legal_name,
+          tag: strings.signature.supplier_party,
+          name: co.signatory.name,
+          title: co.signatory.role.at(language),
+          place_date: co.place_of_issue + ", " + date,
+          sign_image: "/assets/sign.png",
         ),
-        supplier_place_date: co.place_of_issue + ", " + date,
-        client_place_date: strings.signature.signed_on + " " + strings.signature.empty_date,
-        sign_image: "/assets/sign.png",
+        client: (
+          party: client-record.legal_name,
+          tag: strings.signature.client_party,
+          name: none,          // a field with no value prints a line to write on
+          title: none,
+          place_date: none,
+          sign_image: none,
+        ),
       )
     },
 

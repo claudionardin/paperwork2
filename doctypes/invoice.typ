@@ -3,7 +3,7 @@
 // revision letter, a proforma does. NUMBERING.md, rules 8 and 9.
 #import "/lib/model.typ": build
 #import "/lib/page.typ": doc-page
-#import "/lib/blocks.typ": title-block, parties-block, payment-block, delivery-block
+#import "/lib/blocks.typ": title-block, parties-block, terms-block
 #import "/lib/tables.typ": items-table
 
 #let invoice(
@@ -17,7 +17,7 @@
   date: none,
   valid-until: none,
   items: (),
-  vies-checked: none, // required when the document exempts an intra-Community supply
+  vies: none, // "YYYY-MM-DD" equal to date, or "no", or none. See lib/model.typ
   pay-within: auto,
   bank-account: none,
   deliver-to: "",
@@ -27,15 +27,14 @@
     tag: if proforma { "pin" } else { "inv" },
     issuer: issuer, client: client, seq: seq, revision: revision,
     language: language, date: date, valid-until: valid-until,
-    items: items, vies-checked: vies-checked, pay-within: pay-within, bank-account: bank-account,
+    items: items, vies: vies, pay-within: pay-within, bank-account: bank-account,
     deliver-to: deliver-to, deliver-within: deliver-within,
   )
   doc-page(data, {
     title-block(data)
     parties-block(data)
     items-table(data)
-    payment-block(data)
-    delivery-block(data)
+    terms-block(data)
     body
   })
 }

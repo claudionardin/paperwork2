@@ -1,0 +1,16 @@
+# STARTER — client. Copy to <id>.yaml, the 3 letter code used in document numbers.
+# The file name IS the code: `client: "XXX"` on a document is the path to this file.
+
+legal_name: Sample Systems Srl
+
+address:
+  street: Via Roma 1
+  postal_code: "34121"
+  city: Trieste
+  country: IT # ISO 2 letters
+
+vat_number: IT00000000000
+is_business: true # true | false
+
+tax_code: # Italian individual with no VAT number | empty → not printed
+reg_number: # company register number | empty → not printed
